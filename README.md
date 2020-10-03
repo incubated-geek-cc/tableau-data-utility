@@ -10,9 +10,9 @@ This is an enhanced version of [Tristan Guillevin’s notebook](https://observab
 3. Adjustment of d3 network graph layout parameters: `size` `distance` `strength` `collide`
 <br/>![Parameter Adjustments](https://miro.medium.com/max/1050/1*m7G3SaYIAJg1kEd7UQiv0g.png)
 4. Direct adjustment of nodes to alter layout
-<br/>![Demo of Layout Adjustment](https://miro.medium.com/max/960/1*_XoEvi8yXSj8uXXuGkuVdA.gif)
-<br/>![Before Adjustment](https://miro.medium.com/max/1050/1*4YFXQc3_ZoccWZ26FPkNyg.png)<br/>
-<br/>![After Adjustment](https://miro.medium.com/max/1050/1*x3sAFb5uR13G3H-mC3Ye3A.png)
+<br/>**Demo:**<br/>![Demo of Layout Adjustment](https://miro.medium.com/max/960/1*_XoEvi8yXSj8uXXuGkuVdA.gif)
+<br/>**Before Adjustment:**<br/>![Before Adjustment](https://miro.medium.com/max/1050/1*4YFXQc3_ZoccWZ26FPkNyg.png)<br/>
+<br/>**After Adjustment:**<br/>![After Adjustment](https://miro.medium.com/max/1050/1*x3sAFb5uR13G3H-mC3Ye3A.png)
 
 #### Usage Example
 * Original Singapore's 2020 dengue dataset from [data.gov.sg](https://data.gov.sg/dataset/dengue-clusters)
