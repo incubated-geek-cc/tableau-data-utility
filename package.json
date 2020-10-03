@@ -6,8 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "tableau",
+    "data-processing",
+    "network analytics",
+    "network diagrams",
+    "data analytics",
+    "d3.js"
+  ],
   "license": "ISC",
   "dependencies": {
     "consolidate": "^0.16.0",
