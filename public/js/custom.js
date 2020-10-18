@@ -50,7 +50,11 @@ $(document).ready(function() {
             }
 
             
-
+            $("#nodesize, #nodecollide, #nodestrength, #nodedistance").on("input", function(e) {
+                let newVal = parseFloat(e.target.value);
+                $("#" + this.id + "caption").html(newVal);
+            });
+            
             $("#nodesize, #nodecollide, #nodestrength, #nodedistance").on("change", function(e) {
                 let newVal = parseFloat(e.target.value);
                 $("#" + this.id + "caption").html(newVal);
