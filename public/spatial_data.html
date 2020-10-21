@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tableau Data Generator Tool</title>
+    <link rel="icon" type="image/png" href="img/favicon32x32.png" sizes="32x32">
+    <link href="css/bootstrap-3.4.1.min.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/leaflet-1.3.1.css" />
+    <script type="text/javascript" src="js/leaflet-1.3.1.js"></script>
+    <script type="text/javascript" src="js/dom-to-image.min.js"></script>
+    <link rel="stylesheet" href="css/custom.css" />
+</head>
+<body>
+	
+	  	<blockquote class="blockquote blockquote-reverse">
+		    <p><strong>Renders Spatial Data in CSV from <a href="https://tools.ietf.org/html/rfc7946#section-3.3" target="blank">GeoJSON FeatureCollection object</a>.</strong> Both <u>Mixed</u> and <u>Multi</u> geometry feature types are supported by this tool as well.</p>
+		    <footer class="blockquote-footer">Step-by-step tutorial for this tool is available <a href="https://towardsdatascience.com/leverage-on-d3-js-v4-to-build-a-network-graph-for-tableau-with-ease-cc274cba69ce" target="blank">here</a>.</footer>
+	  	</blockquote>
+
+
+		<div class="card">
+		  <div class="card-body">
+		    <h4 class="card-title">Required structure of JSON file</h4>
+		    <p class="card-text">
+		    	– <code>features</code>: array of required objects<br/>
+				– Each object in <code>features</code>: with optional <code>properties</code> and required <code>geometry</code> fields
+		    </p>
+		    <pre>
+	            { 
+	             "type": "FeatureCollection",
+	              "features": [
+	                { 
+	                    "type": "Feature",
+	                    "geometry": {...},
+	                    "properties": {...}
+	                }
+	              ]
+	            }
+		    </pre>
+		    Supported Geometry Features include: <code>Polygon</code> <code>MultiPolygon</code> <code>Point</code> <code>MultiPoint</code> <code>LineString</code> <code>MultiLineString</code>
+		  </div>
+		</div>
+		<div class="card">
+		  	<div class="card-body">
+			    <h4 class="card-title">Sample files for download and testing</h4>
+			    <p class="card-text">
+			    	▸ <a href="data/sg_mp19_regions.geojson" target="blank" download="sg_mp19_regions.geojson">sg_mp19_regions.geojson</a><br />
+		            ▸ <a href="data/sg_tiong_bahru_mkt_to_vivo_city.geojson" target="blank" download="sg_tiong_bahru_mkt_to_vivo_city.geojson">sg_tiong_bahru_mkt_to_vivo_city.geojson</a>
+	            </p>
+        	</div>
+    	</div>
+		<mark><b>Note:</b> Files which contain invalid JSON or JSON structures which do not confirm to the above displayed would generate an error message instead.</mark>	       
+		<div class="card">
+		  	<div class="card-body">
+			    <h4 class="card-title">Upload File: 
+			    	<button type="button" class="btn btn-default btn-xs border rounded-0" data-toggle="popover" data-title="Implementation Illustration" data-dismissible="true" data-placement="right" data-content='<div class="row">
+		                        <div class="col-md-12" style="text-align:center">
+		                            <h4><b><small>Tableau Data Import</small></b></h4>
+		                            <img src="img/tableau_geocsv_data_import.png" height="120px" alt="tableau_geocsv_data_import" />
+		                        </div>
+		                    </div>
+		                    <div class="row">
+		                        <div class="col-md-6" style="text-align:center">
+		                            <h4><b><small>(Multi)Polygon Only</small></b></h4>
+		                            <img src="img/spatial_data_polygon_visualisation.png" height="250px" alt="spatial_data_polygon_visualisation" />
+		                        </div>
+		                        <div class="col-md-6" style="text-align:center">
+		                            <h4><b><small>(Multi)LineString/(Multi)Point Only</small></b></h4>
+		                            <img src="img/spatial_data_route_visualisation.png" height="250px" alt="spatial_data_route_visualisation" />
+		                        </div>
+		                    </div>'> 
+		                <img src="img/tableau_icon.png" width="25px" alt="tableau_icon" />
+		            </button> ⇽ <small><kbd>Select</kbd> to view implementation example.</small>
+			    </h4>
+			    <p class="card-text">
+			    	To input your own data to generate the required csv files, please proceed to input your JSON file below.
+			    	<p id="errorMsg" class="text-danger"></p>
+			        <p id="successMsg" class="text-success"></p>
+			        <div id="uploadProgress" class="progress">
+					    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">0%</div>
+				  	</div>
+				  	<input id="uploadGeoJsonFile" type="file" class="form-control-file border" />
+				  	<br/>
+				  	<button id="exportCSVOutputBtn" type="button" class="btn btn-info btn-sm rounded-0" disabled>
+						Export CSV Output
+					</button>
+	            </p>
+        	</div>
+    	</div>  
+    	<div class="card">
+		  	<div class="card-body">
+			    <h4 class="card-title">(Optional) Make <code>Point</code> and <code>MultiPoint</code> more distinct</h4>
+			    <p class="card-text">
+			    	Create a field named <code>[size (points+lines)]</code> in Tableau with the following formula:
+			    	<pre>
+                    IF 
+                    	[Geometry Type]="Point" OR [Geometry Type]="MultiPoint" THEN 4
+                    	ELSEIF [Geometry Type]="LineString" OR [Geometry Type]="MultiLineString" THEN 1
+                    END
+		            </pre>
+	            </p>
+        	</div>
+    	</div>
+		<div class="card">
+		  	<div class="card-body">
+			    <h4 class="card-title">
+			    	Export Background Map Image
+			    </h4>
+			    <p class="card-text">
+			    	<table>
+			    		<tr>
+			    			<td style="padding-right: 5px;vertical-align: top;">
+			    				<p><mark><small><b>Note:</b> Input a valid basemap URL to change to preferred basemap. Default is: </mark><i>https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png</i></small></p>
+							    <form class="form-inline">
+						       		<label for="inputMapUrl"><b>Map URL: </b></label>
+									<input id="inputMapUrl" type="text" class="form-control form-control-sm rounded-0" placeholder="Enter basemap url" /><button id="changeBasemapBtn" type="button" class="btn btn-outline-info btn-sm rounded-0">Go</button><button id="resetMapBtn" type="button" class="btn btn-outline-dark btn-sm rounded-0">Reset</button>
+							  	</form>
+							  	<small><b>E.g.</b><i>https://maps-{s}.onemap.sg/v3/Original/{z}/{x}/{y}.png</i></small>
+								<div id="map"></div>
+			    			</td>
+			    			<td style="padding-left: 5px;vertical-align: top;">
+							    <div class="row">
+			                        <div class="col-md-12" style="text-align:left">
+			                            <b>Import Background Image as Basemap in Tableau</b><br/>
+			                            <img src="img/tableau_add_background_image.png" height="250px" alt="tableau_add_background_image" />
+			                        </div>
+			                    </div>
+			                   	 <p><mark><small><b>Note:</b>Values in the table are auto-updated on when map is zoomed/dragged)</small></mark></p>
+			    				<table>
+									<tr><th colspan="2"><u>X Field:</u></th></tr>
+								 	<tr><th>X</th><td>(Longitude)</td></tr>
+					                <tr><th>Left:</th><td id="imgBounds_Left">103.60828</td></tr>
+					                <tr><th>Right:</th><td id="imgBounds_Right">104.0419</td></tr>
+					                <tr><th colspan="2"><u>Y Field:</u></th></tr>
+								 	<tr><th>Y</th><td>(Latitude)</td></tr>
+					                <tr><th>Bottom:</th><td id="imgBounds_Bottom">1.22317</td></tr>
+					                <tr><th>Top:</th><td id="imgBounds_Top">1.47612</td></tr>
+								</table>
+			    			</td>
+			    		</tr>
+						<tr>
+							<td style="padding-right: 5px;vertical-align: bottom;"></td>
+							<td style="padding-left: 5px;vertical-align: bottom;">
+								<button id="exportMapImageBtn" type="button" class="btn btn-success btn-sm rounded-0">
+									Export Map Image
+								</button>
+							</td>
+						</tr>
+					</table>
+	            </p>
+        	</div>
+    	</div>
+ 	<script src="js/bootstrap-3.0.12.min.js"></script>
+ 	<script src="js/geojsonhint-3.0.0.js"></script>
+	<script src="js/json2csv.js"></script>
+	<script src="js/spatial_data.js"></script>
+</body>
+</html>

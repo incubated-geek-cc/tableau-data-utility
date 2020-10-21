@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tableau Data Generator Tool</title>
+    <link rel="icon" type="image/png" href="img/favicon32x32.png" sizes="32x32">
+    <link href="css/bootstrap-3.4.1.min.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/custom.css" />
+</head>
+<body>
+	
+	  	<blockquote class="blockquote blockquote-reverse">
+	  		<p>Based on <a href="https://observablehq.com/@ladataviz/network-data-generator" target="blank">Network data generator for Tableau</a> by <a href="https://observablehq.com/@ladataviz" target="blank">Tristan Guillevin</a></p> 
+		    <footer class="blockquote-footer">Step-by-step tutorial for this tool is available <a href="https://towardsdatascience.com/leverage-on-d3-js-v4-to-build-a-network-graph-for-tableau-with-ease-cc274cba69ce" target="blank">here</a>.</footer>
+	  	</blockquote>
+
+		<div class="card">
+		  <div class="card-body">
+		    <h4 class="card-title">Required structure of JSON file</h4>
+		    <p class="card-text">
+		    	– nodes: with required <code>id</code> fields<br/>
+	            – links: with required <code>source</code> and <code>target</code> fields
+		    </p>
+		    <pre>
+	            { 
+	             "nodes": [
+	                { "id": A },
+	                { "id": B }
+	              ],
+	              "links": [
+	                { "source": A, "target": B }
+	              ]
+	            }
+		    </pre>
+		  </div>
+		</div>
+		<div class="card">
+		  	<div class="card-body">
+			    <h4 class="card-title">Sample files for download and testing</h4>
+			    <p class="card-text">
+	            	▸ <a href="data/songs.json" target="blank">songs.json</a><br />
+	            	▸ <a href="data/stackoverflow.json" target="blank">stackoverflow.json</a>
+	            </p>
+        	</div>
+    	</div>	       
+		<div class="card">
+		  	<div class="card-body">
+			    <h4 class="card-title">Upload File: 
+			    	<button type="button" class="btn btn-default btn-xs border rounded-0" data-toggle="popover" data-title="Implementation Illustration" data-dismissible="true" data-placement="right" data-content='<div class="row">
+	                        <div class="col-md-12" style="text-align:center">
+	                            <h4><b><small>Tableau Data Join</small></b></h4>
+	                            <img src="img/tableau_network_graph_data_join.png" height="120px" alt="tableau_network_graph_data_join" />
+	                        </div>
+	                        </div>
+	                        <div class="row">
+	                            <div class="col-md-6" style="text-align:center">
+	                                <h4><b><small>Layout Preview</small></b></h4>
+	                                <img src="img/network_graph_layout_preview.png" height="250px" alt="network_graph_layout_preview" />
+	                            </div>
+	                            <div class="col-md-6" style="text-align:center">
+	                                <h4><b><small>Rendered in Tableau</small></b></h4>
+	                                <img src="img/network_graph_in_tableau.png" height="250px" alt="network_graph_in_tableau" />
+	                            </div>
+	                        </div>'> 
+		                <img src="img/tableau_icon.png" width="25px" alt="tableau_icon" />
+		            </button> ⇽ <small><kbd>Select</kbd> to view implementation example.</small>
+			    </h4>
+			    <p class="card-text">
+			    	To input your own data to generate the required csv files, please proceed to input your JSON file below.
+			    	<p></p><p></p>
+				  	<input id="inputJsonFile" type="file" class="form-control-file border" />
+	            </p>
+        	</div>
+    	</div> 
+    	<div class="card">
+		  	<div class="card-body">
+			    <p class="card-text">
+			    	<span><b>Download nodes.csv</b></span>
+			    	<button id="exportNodesData" value="nodes.csv" type="button" class="btn btn-sm btn-outline-secondary">
+	                    <span class="spinner-border spinner-border-sm"></span>
+	                    Loading...
+	                </button>
+	            </p>
+        	</div>
+    	</div>
+    	<div class="card">
+		  	<div class="card-body">
+			    <p class="card-text">
+			    	<span><b>Download links.csv</b></span>
+			    	<button id="exportLinksData" value="links.csv" type="button" class="btn btn-sm btn-outline-secondary">
+	                    <span class="spinner-border spinner-border-sm"></span>
+	                    Loading...
+	                </button>
+	            </p>
+        	</div>
+    	</div>
+
+		<div class="card">
+		  	<div class="card-body">
+			    <h4 class="card-title">Layout Adjustment</h4>
+			    <p class="card-text">
+			    	To alter the layout of your network graph, feel free to configure the various parameters below. The preview will refresh itself automatically. When configurations are finally finalised, you may proceed to download the CSV files above.
+	            </p>
+        	</div>
+        	<div class="card-body">
+                <h4>Node</h4>
+                <h5>Size (<span id="nodesizecaption">5</span>)</h5>
+                <div class="form-group">
+                  <input id="nodesize" type="range" class="form-control-range" name="nodesizerange" min="1" max="20" step="1" value="5" />
+                </div>
+                <h5>Distance (<span id="nodedistancecaption">30</span>)</h5>
+                <div class="form-group">
+                  <input id="nodedistance" type="range" class="form-control-range" name="nodedistancerange" min="1" max="200" step="1" value="30" />
+                </div>
+                <h4>Force</h4>
+                <h5>Strength (<span id="nodestrengthcaption">90</span>)</h5>
+                <div class="form-group">
+                  <input id="nodestrength" type="range" class="form-control-range" name="nodestrength" min="0" max="250" step="1" value="90" />
+                </div>
+                <h5>Collide (<span id="nodecollidecaption">1</span>)</h5>
+                <div class="form-group">
+                    <input id="nodecollide" type="range" class="form-control-range" name="nodecollide" min="0" max="250" step="1" value="1" />
+                </div>
+            </div>
+            <p class="card-text">
+            	<mark><b>Note:</b> To adjust the node positions, select and drag <img src="img/arrow-pointer.svg" alt="node_cursor" /> the nodes directly in the graph below.</mark>
+        	</p>
+    	</div>
+    	<div class="card-body">
+    		<p class="card-text">
+				<svg id="networkGraph"></svg>
+			</p>
+		</div>
+
+ 	<script src="js/bootstrap-3.0.12.min.js"></script>
+ 	<script src="js/d3.v4.min.js"></script>
+	<script src="js/json2csv.js"></script>
+	<script src="js/network_data.js"></script>
+</body>
+</html>
