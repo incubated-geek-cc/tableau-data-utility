@@ -1,8 +1,10 @@
-# Tableau Network Graph Generator
+# Tableau Data Utility
+## Basically churning out Tableau readable formats from raw input files.
+# Example: Tableau Network Graph Generator
 This is an enhanced version of [Tristan Guillevin’s notebook](https://observablehq.com/@ladataviz/network-data-generator). More information available at [Tutorial/Guide on Medium](https://medium.com/@xuemanxu.cc/leverage-on-d3-js-v4-to-build-a-network-graph-for-tableau-with-ease-cc274cba69ce).
 
 ## Objective: A browser web application which uses [d3.js v4](https://bl.ocks.org/heybignick/3faf257bbbbc7743bb72310d03b86ee8) to generate Tableau ready datasets for network graph visualisations
-### View [app demo](https://tableau-network-data-generator.herokuapp.com/) deployed on Heroku 
+### View [app demo](https://tableau-data-utility.herokuapp.com/) deployed on Heroku 
 
 #### Functionalities
 1. Input user's JSON file
