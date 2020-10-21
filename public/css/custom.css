@@ -1,5 +1,4 @@
-body,
-html {
+body {
     font-family: consolas;
     padding:0;
     padding-top:10px;
@@ -25,11 +24,11 @@ blockquote.pull-right {
 
 #map {
     height: 400px;
-    width: 570px;
+    width: 100%;
 }
 
 #inputMapUrl {
-	width:70%;
+    width:70%;
     font-size:12px;
 }
 #resetMapBtn,

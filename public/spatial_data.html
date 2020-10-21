@@ -106,6 +106,14 @@
 		  	<div class="card-body">
 			    <h4 class="card-title">
 			    	Export Background Map Image
+			    	<button type="button" class="btn btn-default btn-xs border rounded-0" data-toggle="popover" data-title="Implementation Illustration" data-dismissible="true" data-placement="right" data-content='<div class="row">
+	                        <div class="col-md-12" style="text-align:center">
+	                            <h4><b><small>Import Background Image into Tableau</small></b></h4>
+	                            <img src="img/tableau_add_background_image.png" height="320px" alt="tableau_add_background_image" />
+	                        </div>
+	                        </div>'> 
+		                <img src="img/tableau_icon.png" width="25px" alt="tableau_icon" />
+		            </button> ⇽ <small><kbd>Select</kbd> to view implementation example.</small>
 			    </h4>
 			    <p class="card-text">
 			    	<table>
@@ -119,13 +127,9 @@
 							  	<small><b>E.g.</b><i>https://maps-{s}.onemap.sg/v3/Original/{z}/{x}/{y}.png</i></small>
 								<div id="map"></div>
 			    			</td>
-			    			<td style="padding-left: 5px;vertical-align: top;">
-							    <div class="row">
-			                        <div class="col-md-12" style="text-align:left">
-			                            <b>Import Background Image as Basemap in Tableau</b><br/>
-			                            <img src="img/tableau_add_background_image.png" height="250px" alt="tableau_add_background_image" />
-			                        </div>
-			                    </div>
+		    			</tr>
+		    			<tr>
+			    			<td style="padding-left: 5px;vertical-align: top;padding-top:5px">
 			                   	 <p><mark><small><b>Note:</b>Values in the table are auto-updated on when map is zoomed/dragged)</small></mark></p>
 			    				<table>
 									<tr><th colspan="2"><u>X Field:</u></th></tr>
