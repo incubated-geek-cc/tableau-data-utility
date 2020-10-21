@@ -8,7 +8,7 @@ html {
 body.main-body {
     overflow:hidden;
     overflow-x:hidden;
-    height:100vh;
+    height: calc(60px + 10px);
 }
 .blockquote-reverse, 
 blockquote.pull-right {
