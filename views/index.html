@@ -12,48 +12,53 @@
 <body class="main-body">
 	<noscript>You need to enable JavaScript to run this app.</noscript>  
 	<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-	  <a id="spatial_data" class="navbar-brand nav-link" title="Generate Spatial Data for Tableau">Logo</a>
-	  <ul class="navbar-nav">
-	    <li class="nav-item">
-	      	<a id="spatial_data" class="nav-link" title="Generate Spatial Data for Tableau">
-				<svg class="icon icon-globe"><use xlink:href="symbol-defs.svg#icon-globe"></use></svg>
-	      		Spatial Data to CSV
-      		</a>
-	    </li>
-	    <li class="nav-item">
-	      <a id="network_data" class="nav-link" title="Generate Network Graph Data for Tableau">
-	      	<svg class="icon icon-network-graph"><use xlink:href="symbol-defs.svg#icon-network-graph"></use></svg>
-			Network Graph to CSV
-	      </a>
-	    </li>
-	    <li class="nav-item dropdown">
-	      <a id="navbardrop" class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
-	        About Me
-	      </a>
-	      <div class="dropdown-menu">
-	        <a class="dropdown-item" href="https://github.com/incubated-geek-cc" target="blank">
-	        	<svg class="icon icon-github-square"><use xlink:href="symbol-defs.svg#icon-github-square"></use></svg>
-	        	GitHub
-        	</a>
-	        <a class="dropdown-item" href="https://public.tableau.com/profile/charmaine.chui#!/" target="blank">
-				<svg class="icon icon-tableau"><use xlink:href="symbol-defs.svg#icon-tableau"></use></svg>
-	        	Tableau Public
-	        </a>
-	        <a class="dropdown-item" href="https://www.linkedin.com/in/charmaine-chui-15133282/" target="blank">
-	        	<svg class="icon icon-linkedin-square"><use xlink:href="symbol-defs.svg#icon-linkedin-square"></use></svg>
-	        	LinkedIn
-        	</a>
-	        <a class="dropdown-item" href="https://twitter.com/IncubatedGeekCC" target="blank">
-	        	<svg class="icon icon-twitter-square"><use xlink:href="symbol-defs.svg#icon-twitter-square"></use></svg>
-	        	Twitter
-	        </a>
-	        <a class="dropdown-item" href="https://geek-cc.medium.com/" target="blank">
-	        	<svg class="icon icon-medium-symbol"><use xlink:href="symbol-defs.svg#icon-medium-symbol"></use></svg>
-	        	Medium
-	        </a>
-	      </div>
-	    </li>
-	  </ul>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#tableau-data-generators">
+		    <span class="navbar-toggler-icon"></span>
+	  	</button>
+	  	<!--<a id="spatial_data" class="navbar-brand nav-link" title="Generate Spatial Data for Tableau">Logo</a>-->
+  	 	<div class="collapse navbar-collapse" id="tableau-data-generators">
+		    <ul class="navbar-nav">
+		      	<li class="nav-item">
+		      	<a id="spatial_data" class="nav-link" title="Generate Spatial Data for Tableau">
+					<svg class="icon icon-globe"><use xlink:href="symbol-defs.svg#icon-globe"></use></svg>
+		      		Spatial Data to CSV
+	      		</a>
+			    </li>
+			    <li class="nav-item">
+			      <a id="network_data" class="nav-link" title="Generate Network Graph Data for Tableau">
+			      	<svg class="icon icon-network-graph"><use xlink:href="symbol-defs.svg#icon-network-graph"></use></svg>
+					Network Graph to CSV
+			      </a>
+			    </li>
+			    <li class="nav-item dropdown">
+			      	<a id="navbardrop" class="nav-link dropdown-toggle" data-toggle="dropdown">
+			        About Me
+			      	</a>
+			      	<div class="dropdown-menu">
+			        	<a class="dropdown-item" href="https://github.com/incubated-geek-cc" target="blank">
+				        	<svg class="icon icon-github-square"><use xlink:href="symbol-defs.svg#icon-github-square"></use></svg>
+				        	GitHub
+			        	</a>
+				        <a class="dropdown-item" href="https://public.tableau.com/profile/charmaine.chui#!/" target="blank">
+							<svg class="icon icon-tableau"><use xlink:href="symbol-defs.svg#icon-tableau"></use></svg>
+				        	Tableau Public
+				        </a>
+				        <a class="dropdown-item" href="https://www.linkedin.com/in/charmaine-chui-15133282/" target="blank">
+				        	<svg class="icon icon-linkedin-square"><use xlink:href="symbol-defs.svg#icon-linkedin-square"></use></svg>
+				        	LinkedIn
+			        	</a>
+				        <a class="dropdown-item" href="https://twitter.com/IncubatedGeekCC" target="blank">
+				        	<svg class="icon icon-twitter-square"><use xlink:href="symbol-defs.svg#icon-twitter-square"></use></svg>
+				        	Twitter
+				        </a>
+				        <a class="dropdown-item" href="https://geek-cc.medium.com/" target="blank">
+				        	<svg class="icon icon-medium-symbol"><use xlink:href="symbol-defs.svg#icon-medium-symbol"></use></svg>
+				        	Medium
+				        </a>
+			      	</div>
+			    </li>
+		    </ul>
+	  	</div>
 	</nav>
 	<div class="container-md">
 		<h3 id="main-title">Generate Spatial Data for Tableau</h3>
@@ -68,9 +73,9 @@
 		    for(var n in navLinks) {
 		    	if(navLinks[n].id != "navbardrop") {
 		    		navLinks[n].onclick = function(e) {
-			    		let id=e.target.id;
+			    		let id=this.id;
 			    		pageRender.src=id+".html";
-			    		let title=e.target.title;
+			    		let title=this.title;
 			    		mainTitle.innerHTML=title;
 			    	};
 		    	}

@@ -117,3 +117,11 @@ a:focus {
   stroke: currentColor;
   fill: currentColor;
 }
+
+.navbar.navbar-expand-sm.bg-dark.navbar-dark .navbar-nav {
+    background-color: #dee2e6!important;
+}
+
+#navbardrop {
+    margin-right: 10rem;
+}
