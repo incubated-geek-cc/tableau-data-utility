@@ -21,7 +21,7 @@ window.onload = function(e) {
 
     var simulation = null;
 
-    var containerWidth = 754;
+    var containerWidth = 624;
     var height = 1150;
     var width = document.body.clientWidth;
     //max-width: 754px; margin-left: 220.5px; margin-right: 254.5px;

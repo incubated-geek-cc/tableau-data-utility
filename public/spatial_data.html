@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Tableau Data Generator Tool</title>
+    <title>Tableau Data Utility</title>
     <link rel="icon" type="image/png" href="img/favicon32x32.png" sizes="32x32">
     <link href="css/bootstrap-3.4.1.min.css" type="text/css" rel="stylesheet" />
     <link rel="stylesheet" href="css/leaflet-1.3.1.css" />
@@ -14,12 +14,10 @@
 <body>
 	
 	  	<blockquote class="blockquote blockquote-reverse">
-		    <p><strong>Renders Spatial Data in CSV from <a href="https://tools.ietf.org/html/rfc7946#section-3.3" target="blank">GeoJSON FeatureCollection object</a>.</strong> Both <u>Mixed</u> and <u>Multi</u> geometry feature types are supported by this tool as well.</p>
-		    <footer class="blockquote-footer">Step-by-step tutorial for this tool is available <a href="https://geek-cc.medium.com/underrated-combined-functionalities-of-tableau-point-linestring-polygon-mapping-b4c0568a4de2" target="blank">here</a>.</footer>
+		    <p><strong>Renders Spatial Data in CSV from <a href="https://tools.ietf.org/html/rfc7946#section-3.3" target="blank">GeoJSON FeatureCollection object</a>.
+		    <footer class="blockquote-footer"></strong> Both <u>Mixed</u> and <u>Multi</u> geometry feature types are supported by this tool as well. Step-by-step tutorial for this tool is available <a href="https://geek-cc.medium.com/underrated-combined-functionalities-of-tableau-point-linestring-polygon-mapping-b4c0568a4de2" target="blank">here</a>.</footer>
 	  	</blockquote>
-
-
-		<div class="card">
+		<div class="card rounded-0">
 		  <div class="card-body">
 		    <h4 class="card-title">Required structure of JSON file</h4>
 		    <p class="card-text">
@@ -41,7 +39,7 @@
 		    Supported Geometry Features include: <code>Polygon</code> <code>MultiPolygon</code> <code>Point</code> <code>MultiPoint</code> <code>LineString</code> <code>MultiLineString</code>
 		  </div>
 		</div>
-		<div class="card">
+		<div class="card rounded-0">
 		  	<div class="card-body">
 			    <h4 class="card-title">Sample files for download and testing</h4>
 			    <p class="card-text">
@@ -51,28 +49,27 @@
         	</div>
     	</div>
 		<mark><b>Note:</b> Files which contain invalid JSON or JSON structures which do not confirm to the above displayed would generate an error message instead.</mark>	       
-		<div class="card">
+		<div class="card rounded-0">
 		  	<div class="card-body">
 			    <h4 class="card-title">Upload File: 
 			    	<button type="button" class="btn btn-default btn-xs border rounded-0" data-toggle="popover" data-title="Implementation Illustration" data-dismissible="true" data-placement="right" data-content='<div class="row">
-		                        <div class="col-sm-12" style="text-align:center">
+		                        <div class="col-sm-6" style="text-align:center">
 		                            <h4><b><small>Tableau Data Import</small></b></h4>
-		                            <img src="img/tableau_geocsv_data_import.png" height="120px" alt="tableau_geocsv_data_import" />
+		                            <img src="img/tableau_geocsv_data_import.png" height="220px" alt="tableau_geocsv_data_import" />
+		                        </div>
+		                        <div class="col-sm-6" style="text-align:center">
+		                            <h4><b><small>Mixed-Geometry Types</small></b></h4>
+		                            <img src="img/mixed_geometry_in_tableau.png" height="220px" alt="mixed_geometry_in_tableau" />
 		                        </div>
 		                    </div>
 		                    <div class="row">
 		                        <div class="col-sm-6" style="text-align:center">
 		                            <h4><b><small>(Multi)Polygon Only</small></b></h4>
-		                            <img src="img/spatial_data_polygon_visualisation.png" height="250px" alt="spatial_data_polygon_visualisation" />
+		                            <img src="img/spatial_data_polygon_visualisation.png" height="220px" alt="spatial_data_polygon_visualisation" />
 		                        </div>
 		                        <div class="col-sm-6" style="text-align:center">
 		                            <h4><b><small>(Multi)LineString/(Multi)Point Only</small></b></h4>
-		                            <img src="img/spatial_data_route_visualisation.png" height="250px" alt="spatial_data_route_visualisation" />
-		                        </div>
-		                    </div><div class="row">
-		                        <div class="col-sm-12" style="text-align:center">
-		                            <h4><b><small>Mixed-Geometry Types (Polygons, LineStrings and Points)</small></b></h4>
-		                            <img src="img/mixed_geometry_in_tableau.png" height="250px" alt="mixed_geometry_in_tableau" />
+		                            <img src="img/spatial_data_route_visualisation.png" height="220px" alt="spatial_data_route_visualisation" />
 		                        </div>
 		                    </div>'> 
 		                <img src="img/tableau_icon.png" width="25px" alt="tableau_icon" />
@@ -93,7 +90,7 @@
 	            </p>
         	</div>
     	</div>  
-    	<div class="card">
+    	<div class="card rounded-0">
 		  	<div class="card-body">
 			    <h4 class="card-title">(Optional) Make <code>Point</code> and <code>MultiPoint</code> more distinct</h4>
 			    <p class="card-text">
@@ -107,7 +104,7 @@
 	            </p>
         	</div>
     	</div>
-		<div class="card">
+		<div class="card" style="padding-bottom: 20vh;">
 		  	<div class="card-body">
 			    <h4 class="card-title">
 			    	Export Background Map Image

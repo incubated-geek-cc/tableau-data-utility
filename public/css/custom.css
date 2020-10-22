@@ -1,14 +1,14 @@
 body {
     font-family: consolas;
-    padding:0;
-    padding-top:10px;
-    padding-bottom:20vh;
+    padding: 0 15px;
+    font-size: small;
 }
 body.main-body {
-    overflow:hidden;
-    overflow-x:hidden;
-    padding-top:0;
-    height: calc(60px + 10px);
+    overflow-x: hidden;
+    overflow-y: hidden;
+    padding: 0;
+    padding-top: 0;
+    height: 100vh;
 }
 .blockquote-reverse, 
 blockquote.pull-right {
@@ -19,6 +19,25 @@ blockquote.pull-right {
     border-left: 0;
 }
 
+.blockquote {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.blockquote p {
+    margin-bottom: 0;
+}
+
+.card-title {
+    margin-bottom: .25rem;
+    font-size: 1rem;
+}
+.card-body {
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 0.5rem 1.25rem;
+}
 #uploadProgress {
     display:none;
 }
@@ -55,15 +74,13 @@ iframe {
     border-color: initial;
     border-image: initial;
     width: 100%;
-    height: calc(100vh - 40px);
+    height: calc(100vh - 65px - 2.25rem);
 }
 
 .navbar-brand {
     background: url(images/logo.png);
     background-repeat: no-repeat;
-    background-size: 35px, 35px;
-    margin: 0;
-    padding: 0;
+    background-size: contain;
 }
 .nav-item {
     margin: 0;
@@ -71,14 +88,13 @@ iframe {
     margin-top: 0;
 }
 .nav-link {
-    margin-top: 20px;
-    margin-bottom: 0;
     padding-bottom: 10px;
 }
+
 .navbar.navbar-expand-sm {
-    height: 60px;
+    height: 50px;
     padding-top: 0;
-    padding-bottom: 10px;
+    padding-bottom: 0;
 }
 #spatial_data.navbar-brand {
     color: transparent;
