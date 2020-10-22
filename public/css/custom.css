@@ -10,6 +10,7 @@ body.main-body {
     padding-top: 0;
     height: 100vh;
 }
+
 .blockquote-reverse, 
 blockquote.pull-right {
     padding-right: 15px;
@@ -104,5 +105,15 @@ a,
 a:hover,
 a:active,
 a:focus {
-    text-decoration: none
+    text-decoration: none;
+    cursor:pointer;
+}
+
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
 }
