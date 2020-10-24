@@ -32,6 +32,104 @@ window.onload = function(e) {
 	var errorMsg=document.getElementById("errorMsg");
 	var successMsg=document.getElementById("successMsg");
 
+	var uploadSpatialFile = document.getElementById("uploadSpatialFile");
+	var exportGeojsonOutputBtn = document.getElementById("exportGeojsonOutputBtn");
+
+	var uploadSpatialFileIs=null;
+
+	var outputTypes = document.getElementsByClassName("outputType");
+	var outputType="SHP";
+
+	function checkOutputType() {
+		for(var o in outputTypes) {
+			if(outputTypes[o].checked) {
+				outputType = outputTypes[o].value;
+			}
+		}
+	}
+
+	uploadSpatialFile.onchange = function(e) {
+		checkOutputType();
+
+		let fileName = e.target.value;
+        fileName = fileName.split("\\")[2];
+        let n = fileName.lastIndexOf(".");
+        fileName = fileName.substring(0,n);
+        
+        exportGeojsonOutputBtn.value = fileName;
+		exportGeojsonOutputBtn.disabled=true;
+        if (!window.FileReader) {
+            alert("Your browser does not support HTML5 'FileReader' function required to open a file.");
+        } else {
+            var fileis = uploadSpatialFile.files[0];
+            var fileredr = new FileReader();
+            fileredr.onload = function (fle) {
+                var filecont = fle.target.result;
+               	uploadSpatialFileIs=filecont;
+				exportGeojsonOutputBtn.disabled=false;
+            };
+            if(outputType=="SHP") {
+            	fileredr.readAsArrayBuffer(fileis);
+            } else if(outputType=="KML") {
+            	fileredr.readAsText(fileis);
+            }
+        }
+	};
+
+	exportGeojsonOutputBtn.onclick = function(e) {
+		var toOutput="";
+		switch(outputType) {
+			case "SHP":
+				shp(uploadSpatialFileIs).then(function(geojson){
+				  	toOutput=JSON.stringify(geojson);
+				  	if (!window.Blob) {
+		                alert("Your browser does not support HTML5 'Blob' function required to save a file.");
+		            } else {
+		                let textblob = new Blob([toOutput], {
+		                    type: "text/plain"
+		                });
+		                let dwnlnk = document.createElement("a");
+		                dwnlnk.download = exportGeojsonOutputBtn.value + ".geojson";
+		                dwnlnk.innerHTML = "Download File";
+		                if (window.webkitURL != null) {
+		                    dwnlnk.href = window.webkitURL.createObjectURL(textblob);
+		                } else {
+		                    dwnlnk.href = window.URL.createObjectURL(textblob);
+		                    dwnlnk.onclick = destce;
+		                    dwnlnk.style.display = "none";
+		                    document.body.appendChild(dwnlnk);
+		                }
+		                dwnlnk.click();
+		            } 	
+				});
+				break;
+			case "KML":
+				toOutput=JSON.stringify(KMLStrtoGeoJSON(uploadSpatialFileIs));
+				if (!window.Blob) {
+	                alert("Your browser does not support HTML5 'Blob' function required to save a file.");
+	            } else {
+	                let textblob = new Blob([toOutput], {
+	                    type: "text/plain"
+	                });
+	                let dwnlnk = document.createElement("a");
+	                dwnlnk.download = exportGeojsonOutputBtn.value + ".geojson";
+	                dwnlnk.innerHTML = "Download File";
+	                if (window.webkitURL != null) {
+	                    dwnlnk.href = window.webkitURL.createObjectURL(textblob);
+	                } else {
+	                    dwnlnk.href = window.URL.createObjectURL(textblob);
+	                    dwnlnk.onclick = destce;
+	                    dwnlnk.style.display = "none";
+	                    document.body.appendChild(dwnlnk);
+	                }
+	                dwnlnk.click();
+	            } 
+				break;
+		}
+	};
+	
+
+
 	var errorMsgArr=[];
 	var imgBounds=null;
 
@@ -48,11 +146,11 @@ window.onload = function(e) {
         minZoom: 11,
         attributionControl: false
   	}).addTo(map);
-		map.setZoom(initialZoom);
-		map.setView(initialView);
+	map.setZoom(initialZoom);
+	map.setView(initialView);
 
-		map.on("zoomend", function(e) {
-			renderImageBounds();
+	map.on("zoomend", function(e) {
+		renderImageBounds();
 	});
 	map.on("dragend", function(e) {
   		renderImageBounds();
@@ -76,14 +174,14 @@ window.onload = function(e) {
   		renderImageBounds();
 	}
 
-		function renderImageBounds() {
-			imgBounds=map.getBounds();
-        imgBounds_Left.innerHTML=imgBounds._southWest.lng;
+	function renderImageBounds() {
+		imgBounds=map.getBounds();
+    	imgBounds_Left.innerHTML=imgBounds._southWest.lng;
 		imgBounds_Right.innerHTML=imgBounds._northEast.lng;
 
 		imgBounds_Bottom.innerHTML=imgBounds._southWest.lat;
 		imgBounds_Top.innerHTML=imgBounds._northEast.lat;
-		}
+	}
 	
 	resetMapBtn.onclick = function(e) {
 		basemap.setUrl(initialMapUrl);
@@ -95,7 +193,7 @@ window.onload = function(e) {
 		mapUrl=newMapUrl;
 		basemap.setUrl(mapUrl);
 	};
-
+	
 	uploadGeoJsonFile.onclick = function(e) {
 		successMsg.innerHTML="";
 		errorMsg.innerHTML="";
