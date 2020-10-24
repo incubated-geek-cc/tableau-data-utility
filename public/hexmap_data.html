@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tableau Data Utility</title>
+    <link rel="icon" type="image/png" href="img/favicon32x32.png" sizes="32x32">
+    <link href="css/bootstrap-3.4.1.min.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="js/turf-3.5.1.js"></script>
+    <script type="text/javascript" src="js/hextile.js"></script>
+    <link rel="stylesheet" href="css/custom.css" />
+</head>
+<body>
+  	<blockquote class="blockquote blockquote-reverse">
+	    <p><strong>Renders Hex Map Data from <a href="https://tools.ietf.org/html/rfc7946#section-3.3" target="blank">GeoJSON FeatureCollection object</a>.
+	    <footer class="blockquote-footer"></strong> Both <a href="https://turfjs.org/" target="blank">Turf</a> and <a href="https://github.com/datagovsg/hextile" target="blank">Hextile</a> libraries are used to generate outputs. Step-by-step tutorial for this tool is available <a href="https://geek-cc.medium.com/generate-hex-maps-from-your-existing-spatial-data-in-less-than-3-steps-a6f39d778d84" target="blank">here</a>.</footer>
+  	</blockquote>
+	<div class="card rounded-0">
+	  <div class="card-body">
+	    <h4 class="card-title">Required structure of JSON file</h4>
+	    <p class="card-text">
+	    	– <code>features</code>: array of required objects<br/>
+			– Each object in <code>features</code>: with optional <code>properties</code> and required <code>geometry</code> fields
+	    </p>
+	    <pre>
+            { 
+             "type": "FeatureCollection",
+              "features": [
+                { 
+                    "type": "Feature",
+                    "geometry": {...},
+                    "properties": {...}
+                }
+              ]
+            }
+	    </pre>
+	  </div>
+	</div>
+	<div class="card rounded-0">
+	  	<div class="card-body">
+		    <h4 class="card-title">Sample files for download and testing</h4>
+		    <p class="card-text">
+		    	▸ <a href="data/China_Provinces.geojson" target="blank" download="China_Provinces.geojson">China_Provinces.geojson</a><br />
+	            ▸ <a href="data/US_States.geojson" target="blank" download="US_States.geojson">US_States.geojson</a>
+            </p>
+    	</div>
+	</div>
+	<div class="card rounded-0">
+	  	<div class="card-body">
+		    <h4 class="card-title">(Only if necessary) Spatial File Format Conversion</h4>
+		    <p class="card-text">
+		    	If you have your spatial data in other non-GeoJSON formats, feel free to use the following utility to convert it into GeoJSON format.<br/>
+		    	<mark><b>Note:</b> Includes only common conversion of spatial file formats such as <a href="https://docs.fileformat.com/gis/shp/" target="blank">SHP</a> and <a href="https://docs.fileformat.com/gis/kml/" target="blank">KML</a>. SHP uploads should be in the form of a <a href="https://docs.fileformat.com/compression/zip/" target="blank">zip</a> archive.</mark>
+		    </p>
+		    <ol>
+		    	<li>Select Input Spatial File format: 
+		    		<div class="form-inline form-group form-group-sm">
+						<div class="radio">
+						  	<label><input type="radio" name="outputType" class="outputType" value="SHP" checked />&nbsp;SHP File</label>
+						</div>
+						&nbsp;&nbsp;&nbsp;
+						<div class="radio">
+						  	<label><input type="radio" name="outputType" class="outputType" value="KML" />&nbsp;KML File</label>
+						</div>
+					</div>
+		    	</li>
+		    	<li>Upload Spatial File: 
+			    	<input id="uploadSpatialFile" type="file" class="form-control-file border" />
+				</li>
+			</ol>
+			<button id="exportGeojsonOutputBtn" type="button" class="btn btn-warning btn-sm rounded-0" disabled>
+				Export Transformed GeoJSON Output
+			</button>
+    	</div>
+    </div>
+	<mark><b>Note:</b> Files which contain invalid JSON or JSON structures which do not conform to the above displayed would generate an error message instead.</mark>	       
+	<div class="card rounded-0">
+	  	<div class="card-body">
+		    <h4 class="card-title">Upload File: 
+		    	<button type="button" class="btn btn-default btn-xs border rounded-0" data-toggle="popover" data-title="Implementation Illustration" data-dismissible="true" data-placement="right" data-content='<div class="row">
+	                        <div class="col-sm-12" style="text-align:center">
+	                            <h4><b><small>Tableau Data Import</small></b></h4>
+	                            <img src="img/import_hex_map_spatial_file.png" height="160px" alt="import_hex_map_spatial_file" />
+	                        </div>
+	                    </div>
+	                    <div class="row">
+	                        <div class="col-sm-12" style="text-align:center">
+	                            <h4><b><small>Hide Null Vaues in Tableau to render Hex Map Correctly</small></b></h4>
+	                            <img src="img/hide_null_values_in_tableau.png" height="220px" alt="hide_null_values_in_tableau" />
+	                        </div>
+	                    </div>'> 
+	                <img src="img/tableau_icon.png" width="25px" alt="tableau_icon" />
+	            </button> ⇽ <small><kbd>Select</kbd> to view implementation example.</small>
+		    </h4>
+		    <p class="card-text">
+		    	To input your own data to generate the required GeoJSON formatted Hex Map Data, please proceed to input your JSON file below.
+		    	<p id="errorMsg" class="text-danger"></p>
+		        <p id="successMsg" class="text-success"></p>
+		        <div id="uploadProgress" class="progress">
+				    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">0%</div>
+			  	</div>
+			  	<input id="uploadGeoJsonFile" type="file" class="form-control-file border" />
+            </p>
+    	</div>	
+	</div> 
+	<div class="card rounded-0" style="padding-bottom: 20vh"> 
+		<div class="card-body">
+			<div class="row">
+				<div class="col-sm-12">
+					<table>
+						<tr>
+							<td colspan="2">
+								<h4 class="card-title">Select <code>Shape</code></h4>
+							</td>
+							<td colspan="2">
+								<h4 class="card-title">Input <code>Width</code> (<span id="hextileShapeWidthValue">500</span>m)</h4>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<div class="form-check-inline">
+								  	<label class="form-check-label"><input type="radio" name="outputShape" class="outputShape form-check-input" value="square_0" checked />◼</label>
+								</div>
+								<div class="form-check-inline">
+								  	<label class="form-check-label"><input type="radio" name="outputShape" class="outputShape form-check-input" value="square_45" />◆</label>
+								</div>
+								<div class="form-check-inline">
+									<label class="form-check-label"><input type="radio" name="outputShape" class="outputShape form-check-input" value="hexagon_0" />⬣</label>
+								</div>
+								<div class="form-check-inline">
+									<label class="form-check-label"><input type="radio" name="outputShape" class="outputShape form-check-input" value="hexagon_90" />⬢</label>
+								</div>
+							</td>
+							<td colspan="2">
+								<input id="hextileShapeWidth"class="form-control input-xs rounded-0" type="number" name="outputType" min="500" max="500000" step="100" value="500" />
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2"></td>
+							<td colspan="2"><mark><b>Note:</b> Max width = 500,000m = 500km</mark></td>
+						</tr>
+						<tr>
+							<td colspan="4"><br/></td>
+						</tr>
+						<tr>
+							<td colspan="4">
+								<button id="exportGeojsonHexMapOutputBtn" type="button" class="btn btn-info btn-sm rounded-0" disabled>
+									Export GeoJSON Hex Map Output
+								</button>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+ 	<script src="js/bootstrap-3.0.12.min.js"></script>
+ 	<script src="js/geojsonhint-3.0.0.js"></script>
+	<script src="js/json2csv.js"></script>
+	<script src="js/shp.min.js"></script>
+	<script src="js/KMLStrtoGeoJSON.js"></script>
+	<script src="js/hexmap_data.js"></script>
+</body>
+</html>
