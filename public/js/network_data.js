@@ -26,6 +26,7 @@ window.onload = function(e) {
     var width = document.body.clientWidth;
     //max-width: 754px; margin-left: 220.5px; margin-right: 254.5px;
     //console.log(networkGraph)
+
    
     var ngraphContainer = networkGraph.parentElement;
     ngraphContainer["style"]["padding"] = "10px 0";
