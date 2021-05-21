@@ -51,8 +51,8 @@ blockquote.pull-right {
 }
 
 #map {
-    height: 600px;
-    width: 1170px;
+    height: 60vw;
+    width: calc(100vw - 20px);
 }
 
 #inputMapUrl {
