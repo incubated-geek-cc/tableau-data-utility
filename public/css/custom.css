@@ -11,6 +11,13 @@ body.main-body {
     height: 100vh;
 }
 
+#primary_container {
+    padding-right: 5px;
+    padding-left: 5px;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
 .blockquote-reverse, 
 blockquote.pull-right {
     padding-right: 15px;
@@ -44,8 +51,8 @@ blockquote.pull-right {
 }
 
 #map {
-    height: 500px;
-    width: 1000px;
+    height: 600px;
+    width: 1170px;
 }
 
 #inputMapUrl {
@@ -74,7 +81,7 @@ iframe {
     border-style: none;
     border-color: initial;
     border-image: initial;
-    width: 100%;
+    width: 100vw;
     height: calc(100vh - 65px - 2.25rem);
 }
 
