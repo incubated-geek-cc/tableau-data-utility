@@ -10,58 +10,72 @@
     <script defer src="js/svgxuse.js"></script>
 </head>
 <body class="main-body">
-	<noscript>You need to enable JavaScript to run this app.</noscript>  
+	<noscript>You need to enable JavaScript to run this app.</noscript>
 	<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#tableau-data-generators">
-		    <svg class="icon icon-bars" style="
-			    height: 20px;
-			    width: 20px;
-			"><use xlink:href="symbol-defs.svg#icon-bars"></use></svg>
+		    <svg class="icon icon-bars" style="height: 20px;width: 20px;"><use xlink:href="symbol-defs.svg#icon-bars"></use></svg>
 	  	</button>
   	 	<div class="collapse navbar-collapse" id="tableau-data-generators">
 		    <ul class="navbar-nav">
 		    	<li class="nav-item">
-			      	<a id="network_data" class="nav-link active" title="Generate Network Graph Data for Tableau">
-			      		<svg class="icon icon-network-graph"><use xlink:href="symbol-defs.svg#icon-network-graph"></use></svg> 
-			      		Network Graph to CSV
+			      	<a id="geocoder" class="nav-link active" title="Geocode your Coordinates">
+			      		<svg class="icon icon-map-marker"><use xlink:href="symbol-defs.svg#icon-map-marker"></use></svg> 
+			      		Geocoder Tool
 		      		</a>
 			    </li>
-		      	<li class="nav-item">
-			      	<a id="spatial_data" class="nav-link" title="Generate Spatial Data for Tableau">
-						<svg class="icon icon-globe"><use xlink:href="symbol-defs.svg#icon-globe"></use></svg>
-			      		Spatial Data to CSV
+
+
+		    	<!--<li class="nav-item">
+			      	<a id="create_webqr" class="nav-link" title="Generate Custom QR Code">
+			      		<svg class="icon icon-qrcode"><use xlink:href="symbol-defs.svg#icon-qrcode"></use></svg> 
+			      		Create QR Tool
 		      		</a>
-			    </li>
-			    <li class="nav-item">
-			      	<a id="hexmap_data" class="nav-link" title="Generate Hex Maps Data for Tableau">
-			      		<svg class="icon icon-hexagons"><use xlink:href="symbol-defs.svg#icon-hexagons"></use></svg>
-						Spatial Data to Hex Maps
-			      	</a>
-			    </li>
+			    </li>-->
+
+			    <!-- START DROPDOWN MENU::TABLEAU TOOLS-->
 			    <li class="nav-item dropdown">
-			      	<a id="navbardrop" class="nav-link dropdown-toggle" data-toggle="dropdown">
-			      		<svg class="icon icon-user"><use xlink:href="symbol-defs.svg#icon-user"></use></svg>
-			        	About Me
+			      	<a class="navbardrop nav-link dropdown-toggle" data-toggle="dropdown">
+			      		<svg class="icon icon-tableau"><use xlink:href="symbol-defs.svg#icon-tableau"></use></svg>
+			        	Tableauᵀᵒᵒˡˢ
+			      	</a>
+			      	<div class="dropdown-menu rounded-0">
+			      		<a id="network_data" class="nav-link" title="Generate Network Graph Data for Tableau">
+				      		<svg class="icon icon-network-graph"><use xlink:href="symbol-defs.svg#icon-network-graph"></use></svg> 
+				      		Network Graph to CSV
+			      		</a>
+			        	<a id="spatial_data" class="nav-link" title="Generate Spatial Data for Tableau">
+							<svg class="icon icon-globe"><use xlink:href="symbol-defs.svg#icon-globe"></use></svg>
+				      		Spatial Data to CSV
+			      		</a>
+			        	<a id="hexmap_data" class="nav-link" title="Generate Hex Maps Data for Tableau">
+				      		<svg class="icon icon-hexagons"><use xlink:href="symbol-defs.svg#icon-hexagons"></use></svg>
+							Spatial Data to Hex Maps
+				      	</a>
+			      	</div>
+			    </li>
+			    <!-- //END DROPDOWN MENU::TABLEAU TOOLS-->
+
+
+			   	<!-- START DROPDOWN MENU::ABOUT ME-->
+			    <li class="nav-item dropdown">
+			      	<a class="navbardrop nav-link dropdown-toggle" data-toggle="dropdown">
+			      		<svg class="icon icon-user"><use xlink:href="symbol-defs.svg#icon-user"></use></svg> ᴬᵇᵒᵘᵗ ᴹᵉ
 			      	</a>
 			      	<div class="dropdown-menu rounded-0">
 			        	<a class="dropdown-item" href="https://github.com/incubated-geek-cc" target="blank">
-				        	<svg class="icon icon-github-square"><use xlink:href="symbol-defs.svg#icon-github-square"></use></svg>
-				        	GitHub
+				        	<svg class="icon icon-github-square"><use xlink:href="symbol-defs.svg#icon-github-square"></use></svg> ᴳᶤᵗᴴᵘᵇ
 			        	</a>
 				        <a class="dropdown-item" href="https://public.tableau.com/profile/charmaine.chui#!/" target="blank">
-							<svg class="icon icon-tableau"><use xlink:href="symbol-defs.svg#icon-tableau"></use></svg>
-				        	Tableau Public
+							<svg class="icon icon-tableau"><use xlink:href="symbol-defs.svg#icon-tableau"></use></svg> Tableauᴾᵘᵇˡᶤᶜ
 				        </a>
 				        <a class="dropdown-item" href="https://www.linkedin.com/in/charmaine-chui-15133282/" target="blank">
-				        	<svg class="icon icon-linkedin-square"><use xlink:href="symbol-defs.svg#icon-linkedin-square"></use></svg>
-				        	LinkedIn
+				        	<svg class="icon icon-linkedin-square"><use xlink:href="symbol-defs.svg#icon-linkedin-square"></use></svg> ᴸᶤⁿᵏᵉᵈᴵⁿ
 			        	</a>
 				        <a class="dropdown-item" href="https://twitter.com/IncubatedGeekCC" target="blank">
-				        	<svg class="icon icon-twitter-square"><use xlink:href="symbol-defs.svg#icon-twitter-square"></use></svg>
-				        	Twitter
+				        	<svg class="icon icon-twitter-square"><use xlink:href="symbol-defs.svg#icon-twitter-square"></use></svg> ᵀᵚᶤᵗᵗᵉʳ
 				        </a>
 				        <a class="dropdown-item" href="https://geek-cc.medium.com/" target="blank">
-				        	<svg class="icon icon-medium-symbol"><use xlink:href="symbol-defs.svg#icon-medium-symbol"></use></svg> Medium & <svg class="icon icon-TDS"><use xlink:href="symbol-defs.svg#icon-TDS"></use></svg> TDS
+				        	<svg class="icon icon-medium-symbol"><use xlink:href="symbol-defs.svg#icon-medium-symbol"></use></svg> ᴹᵉᵈᶤᵘᵐ﹠<svg class="icon icon-TDS"><use xlink:href="symbol-defs.svg#icon-TDS"></use></svg> 🇹ᵒʷᵃʳᵈˢ 🇩ᵃᵗᵃ 🇸ᶜᶤᵉⁿᶜᵉ
 				        </a>
 			      	</div>
 			    </li>
@@ -69,8 +83,8 @@
 	  	</div>
 	</nav>
 	<div id="primary_container" class="container-fluid">
-		<h3 id="main-title">Generate Network Graph Data for Tableau</h3>
-		<iframe id="page-rendered" src="network_data.html"></iframe>
+		<h3 id="main-title">Geocode your Coordinates</h3>
+		<iframe id="page-rendered" src="geocoder.html"></iframe>
 	</div>
  	<script src="js/bootstrap-3.0.12.min.js"></script>
 	<script>
@@ -79,24 +93,29 @@
 		    var mainTitle=document.getElementById("main-title");
 		    var pageRender=document.getElementById("page-rendered");
 		    for(var n in navLinks) {
-		    	if(navLinks[n].id != "navbardrop") {
-		    		navLinks[n].onclick = function(e) {
-			    		let id=this.id;
-			    		pageRender.src=id+".html";
-			    		let title=this.title;
-			    		mainTitle.innerHTML=title;
+		    	try {
+		    		var navLink_n = navLinks[n]
+			    	if(!navLink_n.classList.contains("navbardrop")) {
+			    		navLink_n.onclick = function(e) {
+				    		let id=this.id;
+				    		pageRender.src=id+".html";
+				    		let title=this.title;
+				    		mainTitle.innerHTML=title;
 
-			    		for(var i in navLinks) {
-			    			if(navLinks[i].id != "navbardrop" && typeof navLinks[i].classList !== "undefined") {
-				    			if(navLinks[i].classList.contains("active")) {
-					    			navLinks[i].classList.remove("active");
-					    		}
+				    		for(var i in navLinks) {
+				    			try {
+					    			var navLink_i=navLinks[i]
+					    			if(!navLink_i.classList.contains("navbardrop") && typeof navLink_i.classList !== "undefined") {
+						    			if(navLink_i.classList.contains("active")) {
+							    			navLink_i.classList.remove("active");
+							    		}
+						    		}
+						    	} catch(err2) {}
 				    		}
-			    		}
-
-			    		this.classList.add("active");
-			    	};
-		    	}
+				    		this.classList.add("active");
+				    	};
+			    	}
+		    	} catch(err) {}
 		    }
 		};
 	</script>

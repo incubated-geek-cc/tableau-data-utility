@@ -245,9 +245,9 @@
 /* visual tweaks */
 
 .leaflet-container {
-	background: #ddd;
+	background: transparent;
 	outline: 0;
-	}
+}
 .leaflet-container a {
 	color: #0078A8;
 	}
@@ -552,9 +552,9 @@
 /* div icon */
 
 .leaflet-div-icon {
-	background: #fff;
-	border: 1px solid #666;
-	}
+	background: transparent;
+	border: none;
+}
 
 
 /* Tooltip */
@@ -573,11 +573,11 @@
 	user-select: none;
 	pointer-events: none;
 	box-shadow: 0 1px 3px rgba(0,0,0,0.4);
-	}
+}
 .leaflet-tooltip.leaflet-clickable {
 	cursor: pointer;
 	pointer-events: auto;
-	}
+}
 .leaflet-tooltip-top:before,
 .leaflet-tooltip-bottom:before,
 .leaflet-tooltip-left:before,
