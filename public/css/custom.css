@@ -49,7 +49,6 @@ blockquote.pull-right {
     width: 1000px;
     padding: 10px 10px 20px 10px;
     border: 1px solid #BFBFBF;
-    box-shadow: 10px 10px 5px #aaaaaa;
 }
 #inputMapUrl {
     width:70%;
@@ -142,4 +141,12 @@ label.form-check-label {
 .navbar-dark .navbar-nav .nav-link.show, 
 .navbar-dark .navbar-nav .show>.nav-link {
     color: #212529;
+}
+
+.svg-caption {
+    font-family: Cambria
+}
+
+div.btn:not(:disabled):not(.disabled) {
+    cursor: default;
 }

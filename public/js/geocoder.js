@@ -18,6 +18,7 @@ window.onload = function(e) {
 	var mapContainer=document.getElementById("map")
 	var resetMapViewBtn=document.getElementById("resetMapViewBtn")
 	var clearMapViewBtn=document.getElementById("clearMapViewBtn")
+	var exportBtn=document.getElementById("exportBtn")
 
 	var exportOutputBtnList=document.getElementsByClassName("exportOutputBtn")
 
@@ -89,6 +90,8 @@ window.onload = function(e) {
 	uploadGeoJsonFile_1.disabled = true
 	resetMapViewBtn.disabled = true
 	clearMapViewBtn.disabled = true
+	exportBtn.getElementsByTagName("span")[0].className="caret"
+	exportBtn.disabled=false
 
 	var boundaryNumVal = 0
 	var coordinatesNumVal = 0
@@ -156,6 +159,10 @@ window.onload = function(e) {
 
 		exportOutputBtn.onclick=function(e) {
 			var exportFormat = e.target.value
+
+			exportBtn.getElementsByTagName("span")[0].className="spinner-border spinner-border-sm"
+			exportBtn.disabled=true
+
 			const deepCopyObj = (obj) => {
 				let resultObj={}
 				for(var o in obj) {
@@ -219,7 +226,7 @@ window.onload = function(e) {
 			} // end for-loop of each coordinate
 
 			var toOutput=JSON.stringify(geocodedPoints)
-
+			
 			if (!window.Blob) {
 	            alert("Your browser does not support HTML5 'Blob' function required to save a file.");
 	        } else {
@@ -234,6 +241,8 @@ window.onload = function(e) {
 	                    dwnlnk.href = window.webkitURL.createObjectURL(textblob);
 	                } 
 	                dwnlnk.click()
+	                exportBtn.getElementsByTagName("span")[0].className="caret"
+					exportBtn.disabled=false
 				} else if(exportFormat == "CSV") {
 					let outputJSONObj = geocodedPoints
 					converter.json2csvAsync(outputJSONObj, {
@@ -256,12 +265,13 @@ window.onload = function(e) {
 			                    type: "text/plain"
 			                });
 			                dwnlnk.download = "geocoded_output.csv"
-
 			                dwnlnk.innerHTML = "Download File";
 			                if (window.webkitURL != null) {
 			                    dwnlnk.href = window.webkitURL.createObjectURL(textblob);
 			                } 
 			                dwnlnk.click()
+			                exportBtn.getElementsByTagName("span")[0].className="caret"
+							exportBtn.disabled=false
 			            }
 			        })
 			        .catch((err) => {
@@ -286,7 +296,6 @@ window.onload = function(e) {
 		uploadSpatialFileIs=null
 		outputTypes[0].checked=true
 		outputType="Geojson"
-
 
 		uploadSpatialFileIs_1=null
 		outputTypes_1[0].checked=true
@@ -322,6 +331,8 @@ window.onload = function(e) {
 		boundaryNum.innerHTML=""
 		coordinatesNum.innerHTML=""
 
+		exportBtn.getElementsByTagName("span")[0].className="caret"
+		exportBtn.disabled=false
 		lockMapAction(true)
 	}
 
@@ -573,7 +584,7 @@ window.onload = function(e) {
 		            	shp(uploadSpatialFileIs_1).then(function(geojsonObj) {
 						  	performGeojsonBoundaryCheck(1,geojsonObj)
 						}) // end shp-file
-		            } else if(outputType=="KML") {
+		            } else if(outputType_1=="KML") {
 		            	let geojsonObj=KMLStrtoGeoJSON(uploadSpatialFileIs_1)
 		            	performGeojsonBoundaryCheck(1,geojsonObj)
 		            } else if(outputType_1=="Geojson") {
