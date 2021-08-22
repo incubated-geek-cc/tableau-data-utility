@@ -17,43 +17,32 @@
 	  	</button>
   	 	<div class="collapse navbar-collapse" id="tableau-data-generators">
 		    <ul class="navbar-nav">
+		    	
+			    <li class="nav-item">
+		      		<a id="network_data" class="nav-link active" title="Generate Network Graph Data for Tableau">
+			      		<svg class="icon icon-network-graph"><use xlink:href="symbol-defs.svg#icon-network-graph"></use></svg> 
+			      		Network Graph to CSV
+		      		</a>
+			    </li>
+			    <li class="nav-item">
+		      		<a id="hexmap_data" class="nav-link" title="Generate Hex Maps Data for Tableau">
+			      		<svg class="icon icon-hexagons"><use xlink:href="symbol-defs.svg#icon-hexagons"></use></svg>
+						Spatial Data to Hex Maps
+			      	</a>
+			    </li>
+			    <li class="nav-item">
+		      		<a id="spatial_data" class="nav-link" title="Generate Spatial Data for Tableau">
+						<svg class="icon icon-globe"><use xlink:href="symbol-defs.svg#icon-globe"></use></svg>
+			      		Spatial Data to CSV
+		      		</a>
+			    </li>
 		    	<li class="nav-item">
-			      	<a id="geocoder" class="nav-link active" title="Geocode your Coordinates">
+			      	<a id="geocoder" class="nav-link" title="Geocode your Coordinates">
 			      		<svg class="icon icon-map-marker"><use xlink:href="symbol-defs.svg#icon-map-marker"></use></svg> 
 			      		Geocoder Tool
 		      		</a>
 			    </li>
-
-
-		    	<!--<li class="nav-item">
-			      	<a id="create_webqr" class="nav-link" title="Generate Custom QR Code">
-			      		<svg class="icon icon-qrcode"><use xlink:href="symbol-defs.svg#icon-qrcode"></use></svg> 
-			      		Create QR Tool
-		      		</a>
-			    </li>-->
-
-			    <!-- START DROPDOWN MENU::TABLEAU TOOLS-->
-			    <li class="nav-item dropdown">
-			      	<a class="navbardrop nav-link dropdown-toggle" data-toggle="dropdown">
-			      		<svg class="icon icon-tableau"><use xlink:href="symbol-defs.svg#icon-tableau"></use></svg>
-			        	Tableauᵀᵒᵒˡˢ
-			      	</a>
-			      	<div class="dropdown-menu rounded-0">
-			      		<a id="network_data" class="nav-link" title="Generate Network Graph Data for Tableau">
-				      		<svg class="icon icon-network-graph"><use xlink:href="symbol-defs.svg#icon-network-graph"></use></svg> 
-				      		Network Graph to CSV
-			      		</a>
-			        	<a id="spatial_data" class="nav-link" title="Generate Spatial Data for Tableau">
-							<svg class="icon icon-globe"><use xlink:href="symbol-defs.svg#icon-globe"></use></svg>
-				      		Spatial Data to CSV
-			      		</a>
-			        	<a id="hexmap_data" class="nav-link" title="Generate Hex Maps Data for Tableau">
-				      		<svg class="icon icon-hexagons"><use xlink:href="symbol-defs.svg#icon-hexagons"></use></svg>
-							Spatial Data to Hex Maps
-				      	</a>
-			      	</div>
-			    </li>
-			    <!-- //END DROPDOWN MENU::TABLEAU TOOLS-->
+			    
 
 
 			   	<!-- START DROPDOWN MENU::ABOUT ME-->
@@ -84,7 +73,7 @@
 	</nav>
 	<div id="primary_container" class="container-fluid">
 		<h3 id="main-title">Geocode your Coordinates</h3>
-		<iframe id="page-rendered" src="geocoder.html"></iframe>
+		<iframe id="page-rendered" src="network_data.html"></iframe>
 	</div>
  	<script src="js/bootstrap-3.0.12.min.js"></script>
 	<script>

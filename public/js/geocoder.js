@@ -474,6 +474,7 @@ window.onload = function(e) {
 				}).bindPopup(function (layer) {
 				    return jsonObjToHTMLTable(layer.feature.properties)
 				}).addTo(map)
+				
 				lockMapAction(false)
 				resetMapView()
 				lockOutputType(0,true)
