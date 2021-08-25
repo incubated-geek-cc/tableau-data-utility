@@ -20,30 +20,24 @@
 		    	
 			    <li class="nav-item">
 		      		<a id="network_data" class="nav-link active" title="Generate Network Graph Data for Tableau">
-			      		<svg class="icon icon-network-graph"><use xlink:href="symbol-defs.svg#icon-network-graph"></use></svg> 
-			      		Network Graph to CSV
+			      		<svg class="icon icon-network-graph"><use xlink:href="symbol-defs.svg#icon-network-graph"></use></svg> ɴᴇᴛᴡᴏʀᴋ ɢʀᴀᴘʜ➝ᴄsᴠ
 		      		</a>
 			    </li>
 			    <li class="nav-item">
 		      		<a id="hexmap_data" class="nav-link" title="Generate Hex Maps Data for Tableau">
-			      		<svg class="icon icon-hexagons"><use xlink:href="symbol-defs.svg#icon-hexagons"></use></svg>
-						Spatial Data to Hex Maps
+			      		<svg class="icon icon-hexagons"><use xlink:href="symbol-defs.svg#icon-hexagons"></use></svg> ᴄᴏɴᴠᴇʀᴛ➝ʜᴇx ᴍᴀᴘs
 			      	</a>
 			    </li>
 			    <li class="nav-item">
 		      		<a id="spatial_data" class="nav-link" title="Generate Spatial Data for Tableau">
-						<svg class="icon icon-globe"><use xlink:href="symbol-defs.svg#icon-globe"></use></svg>
-			      		Spatial Data to CSV
+						<svg class="icon icon-globe"><use xlink:href="symbol-defs.svg#icon-globe"></use></svg> sᴘᴀᴛɪᴀʟ➝ᴄsᴠ
 		      		</a>
 			    </li>
 		    	<li class="nav-item">
 			      	<a id="geocoder" class="nav-link" title="Geocode your Coordinates">
-			      		<svg class="icon icon-map-marker"><use xlink:href="symbol-defs.svg#icon-map-marker"></use></svg> 
-			      		Geocoder Tool
+			      		<svg class="icon icon-map-marker"><use xlink:href="symbol-defs.svg#icon-map-marker"></use></svg> ɢᴇᴏᴄᴏᴅᴇʀ ᴛᴏᴏʟ
 		      		</a>
 			    </li>
-			    
-
 
 			   	<!-- START DROPDOWN MENU::ABOUT ME-->
 			    <li class="nav-item dropdown">
@@ -72,7 +66,7 @@
 	  	</div>
 	</nav>
 	<div id="primary_container" class="container-fluid">
-		<h3 id="main-title">Geocode your Coordinates</h3>
+		<h3 id="main-title">Generate Network Graph Data for Tableau<br><small class="small">Follow me on <a href="https://geek-cc.medium.com/" target="blank">Medium</a> for more Tableau tips.</small></h3>
 		<iframe id="page-rendered" src="network_data.html"></iframe>
 	</div>
  	<script src="js/bootstrap-3.0.12.min.js"></script>
@@ -89,7 +83,7 @@
 				    		let id=this.id;
 				    		pageRender.src=id+".html";
 				    		let title=this.title;
-				    		mainTitle.innerHTML=title;
+				    		mainTitle.innerHTML=title+'<br><small class="small">Follow me on <a href="https://geek-cc.medium.com/" target="blank">Medium</a> for more Tableau tips.</small>';
 
 				    		for(var i in navLinks) {
 				    			try {
