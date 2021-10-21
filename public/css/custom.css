@@ -150,3 +150,7 @@ label.form-check-label {
 div.btn:not(:disabled):not(.disabled) {
     cursor: default;
 }
+
+#primary-container [
+    position: fixed;
+}
