@@ -37,7 +37,7 @@ blockquote.pull-right {
     -ms-flex: 1 1 auto;
     flex: 1 1 auto;
     min-height: 1px;
-    padding: 0.5rem 1.25rem;
+    padding: 2.5rem 1.25rem;
 }
 #uploadProgress,
 #uploadProgress_1 {
