@@ -21,7 +21,7 @@ window.onload = function(e) {
 
     var simulation = null;
 
-    var containerWidth = 624;
+    var containerWidth = 624; // // window.innerHeight/4 * 3;
     var height = 1150;
     var width = document.body.clientWidth;
     //max-width: 754px; margin-left: 220.5px; margin-right: 254.5px;
@@ -204,7 +204,7 @@ window.onload = function(e) {
                 .selectAll("line")
                 .data(graph.links)
                 .enter().append("line")
-                    .attr("stroke-width", d => 1);
+                    .attr("stroke-width", d => 2.5);
                     //.attr("stroke-width", d=> Math.sqrt(d.value));
 
         node = svg.append("g")

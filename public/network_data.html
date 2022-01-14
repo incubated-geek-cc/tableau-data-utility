@@ -102,28 +102,36 @@
             </p>
     	</div>
     	<div class="card-body">
-            <h4>Node</h4>
-            <h5>Size (<span id="nodesizecaption">5</span>)</h5>
-            <div class="form-group">
-              <input id="nodesize" type="range" class="form-control-range" name="nodesizerange" min="1" max="20" step="1" value="5" />
-            </div>
-            <h5>Distance (<span id="nodedistancecaption">30</span>)</h5>
-            <div class="form-group">
-              <input id="nodedistance" type="range" class="form-control-range" name="nodedistancerange" min="1" max="200" step="1" value="30" />
-            </div>
-            <h4>Force</h4>
-            <h5>Strength (<span id="nodestrengthcaption">90</span>)</h5>
-            <div class="form-group">
-              <input id="nodestrength" type="range" class="form-control-range" name="nodestrength" min="0" max="250" step="1" value="90" />
-            </div>
-            <h5>Collide (<span id="nodecollidecaption">1</span>)</h5>
-            <div class="form-group">
-                <input id="nodecollide" type="range" class="form-control-range" name="nodecollide" min="0" max="250" step="1" value="1" />
+            <div class="row">
+                <div class="col-md-3">
+                    <h5>Size (<span id="nodesizecaption">10</span>)</h5>
+                    <div class="form-group">
+                      <input id="nodesize" type="range" class="form-control-range" name="nodesizerange" min="1" max="15" step="1" value="10" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <h5>Distance (<span id="nodedistancecaption">30</span>)</h5>
+                    <div class="form-group">
+                      <input id="nodedistance" type="range" class="form-control-range" name="nodedistancerange" min="1" max="200" step="1" value="30" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <h5>Strength (<span id="nodestrengthcaption">90</span>)</h5>
+                    <div class="form-group">
+                      <input id="nodestrength" type="range" class="form-control-range" name="nodestrength" min="0" max="250" step="1" value="90" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <h5>Collide (<span id="nodecollidecaption">1</span>)</h5>
+                    <div class="form-group">
+                        <input id="nodecollide" type="range" class="form-control-range" name="nodecollide" min="0" max="250" step="1" value="1" />
+                    </div>
+                </div>
             </div>
         </div>
-        <p class="card-text">
-        	<mark><b>Note:</b> To adjust the node positions, select and drag <img src="img/arrow-pointer.svg" alt="node_cursor" /> the nodes directly in the graph below.</mark>
-    	</p>
+        <p class="card-text w-100">
+            <mark><b>Note:</b> To adjust the node positions, select and drag <img src="img/arrow-pointer.svg" alt="node_cursor" /> the nodes directly in the graph below.</mark>
+        </p>
     	<div class="card-body">
     		<p class="card-text">
     			<svg id="networkGraph"></svg>
