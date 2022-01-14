@@ -113,26 +113,28 @@
 
 		    for(var n in navLinks) {
 		    	try {
-		    		var navLink_n = navLinks[n]
-			    	if(!navLink_n.classList.contains("navbardrop")) {
-			    		navLink_n.onclick = function(e) {
-				    		let id=this.id;
-				    		pageRender.src=id+".html";
-				    		let title=this.title;
-				    		mainTitle.innerHTML=title+'<small class="float-right">Follow me on <a href="https://geek-cc.medium.com/" target="blank">Medium</a> for more Tableau tips.</small>';
+		    		if(!isNaN(n)) {
+		    			var navLink_n = navLinks[n]
+				    	if(!navLink_n.classList.contains("navbardrop")) {
+				    		navLink_n.onclick = function(e) {
+					    		let id=this.id;
+					    		pageRender.src=id+".html";
+					    		let title=this.title;
+					    		mainTitle.innerHTML=title+'<small class="float-right">Follow me on <a href="https://geek-cc.medium.com/" target="blank">Medium</a> for more Tableau tips.</small>';
 
-				    		for(var i in navLinks) {
-				    			try {
-					    			var navLink_i=navLinks[i]
-					    			if(!navLink_i.classList.contains("navbardrop") && typeof navLink_i.classList !== "undefined") {
-						    			if(navLink_i.classList.contains("active")) {
-							    			navLink_i.classList.remove("active");
+					    		for(var i in navLinks) {
+					    			try {
+						    			var navLink_i=navLinks[i]
+						    			if(!navLink_i.classList.contains("navbardrop") && typeof navLink_i.classList !== "undefined") {
+							    			if(navLink_i.classList.contains("active")) {
+								    			navLink_i.classList.remove("active");
+								    		}
 							    		}
-						    		}
-						    	} catch(err2) {}
-				    		}
-				    		this.classList.add("active");
-				    	};
+							    	} catch(err2) {}
+					    		}
+					    		this.classList.add("active");
+					    	};
+				    	}
 			    	}
 		    	} catch(err) {
 		    		console.log(err);

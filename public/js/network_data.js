@@ -25,7 +25,7 @@ window.onload = function(e) {
     var height = 1150;
     var width = document.body.clientWidth;
 
-   
+
     var ngraphContainer = networkGraph.parentElement;
     ngraphContainer["style"]["padding"] = "10px 0";
     ngraphContainer["style"]["position"] = "relative";
@@ -35,6 +35,52 @@ window.onload = function(e) {
     ngraphContainer.parentElement["style"]["margin-left"] = (((width-containerWidth)/2)-34) + "px";
     ngraphContainer.parentElement["style"]["margin-right"] = ((width-containerWidth)/2) + "px";
 	
+    var cssValsMapping={
+        "background": "#ffffff",
+        "position": "fixed",
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "overflow": "auto",
+        "border": "2px solid #000000"
+    };
+    var cssUnsetValsMapping={
+        "background": "",
+        "position": "",
+        "top": "",
+        "bottom": "",
+        "left": "",
+        "right": "",
+        "overflow": "",
+        "border": ""
+    };
+    function assignCssMapping(ele,mappingObj) {
+        for(let k in mappingObj) {
+            ele["style"][k]=mappingObj[k];
+        }
+    }
+    var networkGraphScreen=ngraphContainer.parentElement.parentElement;
+
+    const goFullScreen = "⛶";
+    const exitFullScreen = "▢";
+    var toggleFullScreen = document.getElementById("toggleFullScreen");
+    toggleFullScreen.addEventListener("click", makeFullScreen);
+
+    function makeFullScreen(ev) {
+        var currentValue=ev.target.value;
+        
+        if(currentValue==goFullScreen) {
+            assignCssMapping(networkGraphScreen,cssValsMapping);
+            toggleFullScreen.value=exitFullScreen;
+            toggleFullScreen.innerHTML=exitFullScreen;
+        } else {
+            assignCssMapping(networkGraphScreen,cssUnsetValsMapping);
+            toggleFullScreen.value=goFullScreen;
+            toggleFullScreen.innerHTML=goFullScreen;
+        }
+    };
+
     var svg = null;
     var link = null;
     var node = null;
