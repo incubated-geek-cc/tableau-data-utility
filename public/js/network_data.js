@@ -21,18 +21,16 @@ window.onload = function(e) {
 
     var simulation = null;
 
-    var containerWidth = 624; // // window.innerHeight/4 * 3;
+    var containerWidth = 624;
     var height = 1150;
     var width = document.body.clientWidth;
-    //max-width: 754px; margin-left: 220.5px; margin-right: 254.5px;
-    //console.log(networkGraph)
 
    
     var ngraphContainer = networkGraph.parentElement;
     ngraphContainer["style"]["padding"] = "10px 0";
     ngraphContainer["style"]["position"] = "relative";
     ngraphContainer["style"]["min-height"] = "33px";
-   
+    
     ngraphContainer.parentElement["style"]["max-width"] = containerWidth + "px";
     ngraphContainer.parentElement["style"]["margin-left"] = (((width-containerWidth)/2)-34) + "px";
     ngraphContainer.parentElement["style"]["margin-right"] = ((width-containerWidth)/2) + "px";
