@@ -129,20 +129,24 @@ window.onload = function(e) {
 	};
 	
 
+	var scale = 'scale(0.8)';
+	mapContainer.style.webkitTransform =  scale; // Chrome, Opera, Safari
+	mapContainer.style.msTransform =   scale; // IE 9
+	mapContainer.style.transform = scale; // General
 
 	var errorMsgArr=[];
 	var imgBounds=null;
 
-	var initialMapUrl="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-	var initialZoom=16;
-	var initialView=[1.28528,103.83235];
+	var initialMapUrl="https://stamen-tiles.a.ssl.fastly.net/toner-hybrid/{z}/{x}/{y}.png";
+	var initialZoom=12;
+	var initialView=[1.3521,103.8198];
 
-	var mapUrl="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+	var mapUrl="https://stamen-tiles.a.ssl.fastly.net/toner-hybrid/{z}/{x}/{y}.png";
 	inputMapUrl.value=mapUrl;
 		var map = L.map("map");
 		var basemap=L.tileLayer(mapUrl, {
         detectRetina: true,
-        maxZoom: 17,
+        maxZoom: 19,
         minZoom: 11,
         attributionControl: false
   	}).addTo(map);

@@ -44,11 +44,16 @@ blockquote.pull-right {
     display:none;
 }
 
-#map {
-    height: 500px;
-    width: 1000px;
+#map,
+#mapAlt {
+    height: 60vw;
+    width: 95vw;
     padding: 10px 10px 20px 10px;
     border: 1px solid #BFBFBF;
+}
+#mapAlt {
+    height:500px;
+    width:1000px;
 }
 #inputMapUrl {
     width:70%;

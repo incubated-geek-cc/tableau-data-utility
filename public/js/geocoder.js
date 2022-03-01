@@ -15,7 +15,7 @@ window.onload = function(e) {
 	var progress=0
 	var t=null
 
-	var mapContainer=document.getElementById("map")
+	var mapContainer=document.getElementById("mapAlt")
 	var resetMapViewBtn=document.getElementById("resetMapViewBtn")
 	var clearMapViewBtn=document.getElementById("clearMapViewBtn")
 	var exportBtn=document.getElementById("exportBtn")
@@ -113,7 +113,7 @@ window.onload = function(e) {
 		mapContainer["style"]["touch-action"]=toLock ? "none": "auto"
 		mapContainer["style"]["pointer-events"]=toLock ? "none": "auto"
 	}
-	var map = L.map("map", {
+	var map = L.map("mapAlt", {
 		zoomControl: false
 	})
 	map.on("zoomend", function(e) {
@@ -467,7 +467,7 @@ window.onload = function(e) {
 				    pointToLayer: function (feature, latlng) {
 						return L.marker(latlng, {
 						   icon: L.divIcon({      
-						       html: '<svg class="icon-coordinate icon icon-map-marker-2"><use xlink:href="symbol-defs.svg#icon-map-marker-2"></use></svg>'
+						       html: '<svg class="icon-coordinate icon icon-map-marker-2"><use xlink:href="img/symbol-defs.svg#icon-map-marker-2"></use></svg>'
 						   })
 						}).addTo(map)
 					}
