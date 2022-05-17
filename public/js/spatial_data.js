@@ -273,9 +273,95 @@ window.onload = function(e) {
 		return resultObj;
 	}
 
+
+	function polygonExtractionFromFeatureCollection(geojsonObj) {
+		let updatedGeojsonObj={
+			"type":"FeatureCollection",
+			"features": []
+		};
+		let geojsonInputFeatures=geojsonObj["features"];
+
+		for(let g in geojsonInputFeatures) {
+		    let geojsonInputFeature=geojsonInputFeatures[g];
+		    let featureProps=geojsonInputFeature["properties"];
+		    let featureGeometry=geojsonInputFeature["geometry"];
+		    let featureGeometryType=featureGeometry["type"];
+
+		    let newPropertiesObj=JSON.parse(JSON.stringify(featureProps));
+
+		    if(featureGeometryType=="Polygon") {
+		        newPropertiesObj["SUBID"]=0;
+				let updatedGeojsonObjFeature={
+					"type":"Feature",
+					"properties": newPropertiesObj,
+					"geometry":featureGeometry
+				};
+				updatedGeojsonObj["features"].push(updatedGeojsonObjFeature);
+		    } else if(featureGeometryType=="MultiPolygon") {
+		        let multiPolyCoords=featureGeometry["coordinates"];
+		        for(let m1 in multiPolyCoords) {
+		            for(let m2 in multiPolyCoords[m1]) {
+		                let polyCoords=[multiPolyCoords[m1][m2]];
+		                newPropertiesObj["SUBID"]=m1+"_"+m2;
+						let updatedGeojsonObjFeature={
+							"type":"Feature",
+							"properties":newPropertiesObj,
+							"geometry":{
+								"type":"Polygon",
+								"coordinates":polyCoords
+							}
+						};
+						updatedGeojsonObj["features"].push(updatedGeojsonObjFeature);
+		            }
+		        }
+		    } else if(featureGeometryType=="GeometryCollection") {
+		        let geometriesArr=featureGeometry["geometries"];
+		        for(let g2 in geometriesArr) {
+		            let geometrySubObj=geometriesArr[g2];
+		            let geometrySubType=geometrySubObj["geometry"]["type"];
+		            if(geometrySubType=="Polygon") {
+		                let polyCoords=geometrySubObj["geometry"]["coordinates"];
+		                newPropertiesObj["SUBID"]=0;
+						let updatedGeojsonObjFeature={
+							"type":"Feature",
+							"properties":newPropertiesObj,
+							"geometry":{
+								"type":"Polygon",
+								"coordinates":polyCoords
+							}
+						};
+						updatedGeojsonObj["features"].push(updatedGeojsonObjFeature);
+		            } else if(geometrySubType=="MultiPolygon") {
+		                let multiPolyCoords=geometrySubObj["geometry"]["coordinates"];
+		                for(let m1 in multiPolyCoords) {
+		                    for(let m2 in multiPolyCoords[m1]) {
+		                        let polyCoords=[multiPolyCoords[m1][m2]];
+		                        newPropertiesObj["SUBID"]=m1+"_"+m2;
+								let updatedGeojsonObjFeature={
+									"type":"Feature",
+									"properties":newPropertiesObj,
+									"geometry":{
+										"type":"Polygon",
+										"coordinates":polyCoords
+									}
+								};
+								updatedGeojsonObj["features"].push(updatedGeojsonObjFeature);
+		                    }
+		                }
+		            }
+		        }
+		    }
+		}
+
+		return updatedGeojsonObj;
+	}
+
 	exportCSVOutputBtn.onclick = function(e) {
 		resetProgressBar();
     	loadProgressBar();
+
+    	let geojsonObj = polygonExtractionFromFeatureCollection(uploadedGeojsonObj);
+    	uploadedGeojsonObj = JSON.parse(JSON.stringify(geojsonObj));
 
 		var features = uploadedGeojsonObj["features"];
 		var outputJSONObj = [];		
