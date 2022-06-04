@@ -153,31 +153,6 @@ window.onload = function(e) {
 	map.setZoom(initialZoom);
 	map.setView(initialView);
 
-	map.on("zoomend", function(e) {
-		renderImageBounds();
-	});
-	map.on("dragend", function(e) {
-  		renderImageBounds();
-	});
-	map.on("viewreset", function(e) {
-  		renderImageBounds();
-	});
-	map.on("moveend", function(e) {
-  		renderImageBounds();
-	});
-	map.on("load", function(e) {
-  		renderImageBounds();
-	});
-	map.on("resize", function(e) {
-  		renderImageBounds();
-	});
-	
-	function resetMapView() {
-		map.setZoom(initialZoom);
-  		map.setView(initialView);
-  		renderImageBounds();
-	}
-
 	function renderImageBounds() {
 		imgBounds=map.getBounds();
     	imgBounds_Left.innerHTML=imgBounds._southWest.lng;
@@ -185,6 +160,18 @@ window.onload = function(e) {
 
 		imgBounds_Bottom.innerHTML=imgBounds._southWest.lat;
 		imgBounds_Top.innerHTML=imgBounds._northEast.lat;
+	}
+
+	// Binding multiple events to a single element
+	function addMultipleEvents(eventsArray, targetElem, handler) {
+	  eventsArray.map((event) => targetElem.on(event, handler));
+	}
+	addMultipleEvents(['zoomend', 'dragend', 'viewreset', 'moveend', 'load', 'resize'], map, renderImageBounds);
+
+	function resetMapView() {
+		map.setZoom(initialZoom);
+  		map.setView(initialView);
+  		renderImageBounds();
 	}
 	
 	resetMapBtn.onclick = function(e) {
@@ -319,38 +306,57 @@ window.onload = function(e) {
 		        for(let g2 in geometriesArr) {
 		            let geometrySubObj=geometriesArr[g2];
 		            let geometrySubType=geometrySubObj["geometry"]["type"];
-		            if(geometrySubType=="Polygon") {
-		                let polyCoords=geometrySubObj["geometry"]["coordinates"];
+
+	             	if(typeof geometrySubObjGeometry !== "undefined") {
+			            if(geometrySubType=="Polygon") {
+			                let polyCoords=geometrySubObj["geometry"]["coordinates"];
+			                newPropertiesObj["SUBID"]=0;
+							let updatedGeojsonObjFeature={
+								"type":"Feature",
+								"properties":newPropertiesObj,
+								"geometry":{
+									"type":"Polygon",
+									"coordinates":polyCoords
+								}
+							};
+							updatedGeojsonObj["features"].push(updatedGeojsonObjFeature);
+			            } else if(geometrySubType=="MultiPolygon") {
+			                let multiPolyCoords=geometrySubObj["geometry"]["coordinates"];
+			                for(let m1 in multiPolyCoords) {
+			                    for(let m2 in multiPolyCoords[m1]) {
+			                        let polyCoords=[multiPolyCoords[m1][m2]];
+			                        newPropertiesObj["SUBID"]=m1+"_"+m2;
+									let updatedGeojsonObjFeature={
+										"type":"Feature",
+										"properties":newPropertiesObj,
+										"geometry":{
+											"type":"Polygon",
+											"coordinates":polyCoords
+										}
+									};
+									updatedGeojsonObj["features"].push(updatedGeojsonObjFeature);
+			                    }
+			                }
+			            }
+			        } else {
 		                newPropertiesObj["SUBID"]=0;
-						let updatedGeojsonObjFeature={
-							"type":"Feature",
-							"properties":newPropertiesObj,
-							"geometry":{
-								"type":"Polygon",
-								"coordinates":polyCoords
-							}
-						};
-						updatedGeojsonObj["features"].push(updatedGeojsonObjFeature);
-		            } else if(geometrySubType=="MultiPolygon") {
-		                let multiPolyCoords=geometrySubObj["geometry"]["coordinates"];
-		                for(let m1 in multiPolyCoords) {
-		                    for(let m2 in multiPolyCoords[m1]) {
-		                        let polyCoords=[multiPolyCoords[m1][m2]];
-		                        newPropertiesObj["SUBID"]=m1+"_"+m2;
-								let updatedGeojsonObjFeature={
-									"type":"Feature",
-									"properties":newPropertiesObj,
-									"geometry":{
-										"type":"Polygon",
-										"coordinates":polyCoords
-									}
-								};
-								updatedGeojsonObj["features"].push(updatedGeojsonObjFeature);
-		                    }
+		                let updatedGeojsonObjFeature={
+		                  "type":"Feature",
+		                  "properties": newPropertiesObj,
+		                  "geometry":featureGeometry
 		                }
-		            }
+		                updatedGeojsonObj["features"].push(updatedGeojsonObjFeature);
+	              	} 
 		        }
-		    }
+		    } else {
+	            newPropertiesObj["SUBID"]=0;
+	            let updatedGeojsonObjFeature={
+	              "type":"Feature",
+	              "properties": newPropertiesObj,
+	              "geometry":featureGeometry
+	            }
+	            updatedGeojsonObj["features"].push(updatedGeojsonObjFeature);
+          	}
 		}
 
 		return updatedGeojsonObj;
@@ -390,12 +396,12 @@ window.onload = function(e) {
 							var lat = latlng[1];
 							var lng = latlng[0];
 
-							var outputJSONObjRecord_Copy = deepCopyObj(outputJSONObjRecord);
+							var outputJSONObjRecord_Copy = JSON.parse(JSON.stringify(outputJSONObjRecord));
 
-							outputJSONObjRecord_Copy["Feature ID (polygons)"]=f;
-							outputJSONObjRecord_Copy["Sub Feature ID (polygons)"]=f;
+							outputJSONObjRecord_Copy["Feature ID"]=f;
+							outputJSONObjRecord_Copy["Sub Feature ID"]=f;
 							outputJSONObjRecord_Copy["Geometry Type"]=geometryType;
-							outputJSONObjRecord_Copy["Point Order (polygons)"]=ptOrder++;
+							outputJSONObjRecord_Copy["Point Order"]=ptOrder++;
 							outputJSONObjRecord_Copy["X"]=parseFloat(lng);
 							outputJSONObjRecord_Copy["Y"]=parseFloat(lat);
 
@@ -411,12 +417,12 @@ window.onload = function(e) {
 								var lat = latlng[1];
 								var lng = latlng[0];
 
-								var outputJSONObjRecord_Copy = deepCopyObj(outputJSONObjRecord);
+								var outputJSONObjRecord_Copy = JSON.parse(JSON.stringify(outputJSONObjRecord));
 
-								outputJSONObjRecord_Copy["Feature ID (polygons)"]=f;
-								outputJSONObjRecord_Copy["Sub Feature ID (polygons)"]=i;
+								outputJSONObjRecord_Copy["Feature ID"]=f;
+								outputJSONObjRecord_Copy["Sub Feature ID"]=i;
 								outputJSONObjRecord_Copy["Geometry Type"]=geometryType;
-								outputJSONObjRecord_Copy["Point Order (polygons)"]=ptOrder++;
+								outputJSONObjRecord_Copy["Point Order"]=ptOrder++;
 								outputJSONObjRecord_Copy["X"]=parseFloat(lng);
 								outputJSONObjRecord_Copy["Y"]=parseFloat(lat);
 
@@ -428,12 +434,12 @@ window.onload = function(e) {
 						var lat = latlng[1];
 						var lng = latlng[0];
 
-						var outputJSONObjRecord_Copy = deepCopyObj(outputJSONObjRecord);
+						var outputJSONObjRecord_Copy = JSON.parse(JSON.stringify(outputJSONObjRecord));
 
-						outputJSONObjRecord_Copy["Feature ID (points+lines)"]=f;
-						outputJSONObjRecord_Copy["Sub Feature ID (points+lines)"]=f;
+						outputJSONObjRecord_Copy["Feature ID"]=f;
+						outputJSONObjRecord_Copy["Sub Feature ID"]=f;
 						outputJSONObjRecord_Copy["Geometry Type"]=geometryType;
-						outputJSONObjRecord_Copy["Point Order (points+lines)"]=ptOrder++;
+						outputJSONObjRecord_Copy["Point Order"]=ptOrder++;
 						outputJSONObjRecord_Copy["X"]=parseFloat(lng);
 						outputJSONObjRecord_Copy["Y"]=parseFloat(lat);
 
@@ -445,12 +451,12 @@ window.onload = function(e) {
 							var lat = latlng[1];
 							var lng = latlng[0];
 
-							var outputJSONObjRecord_Copy = deepCopyObj(outputJSONObjRecord);
+							var outputJSONObjRecord_Copy = JSON.parse(JSON.stringify(outputJSONObjRecord));
 
-							outputJSONObjRecord_Copy["Feature ID (points+lines)"]=f;
-							outputJSONObjRecord_Copy["Sub Feature ID (points+lines)"]=i;
+							outputJSONObjRecord_Copy["Feature ID"]=f;
+							outputJSONObjRecord_Copy["Sub Feature ID"]=i;
 							outputJSONObjRecord_Copy["Geometry Type"]=geometryType;
-							outputJSONObjRecord_Copy["Point Order (points+lines)"]=ptOrder++;
+							outputJSONObjRecord_Copy["Point Order"]=ptOrder++;
 							outputJSONObjRecord_Copy["X"]=parseFloat(lng);
 							outputJSONObjRecord_Copy["Y"]=parseFloat(lat);
 
@@ -462,12 +468,12 @@ window.onload = function(e) {
 							var lat = latlng[1];
 							var lng = latlng[0];
 
-							var outputJSONObjRecord_Copy = deepCopyObj(outputJSONObjRecord);
+							var outputJSONObjRecord_Copy = JSON.parse(JSON.stringify(outputJSONObjRecord));
 
-							outputJSONObjRecord_Copy["Feature ID (points+lines)"]=f;
-							outputJSONObjRecord_Copy["Sub Feature ID (points+lines)"]=f;
+							outputJSONObjRecord_Copy["Feature ID"]=f;
+							outputJSONObjRecord_Copy["Sub Feature ID"]=f;
 							outputJSONObjRecord_Copy["Geometry Type"]=geometryType;
-							outputJSONObjRecord_Copy["Point Order (points+lines)"]=ptOrder++;
+							outputJSONObjRecord_Copy["Point Order"]=ptOrder++;
 							outputJSONObjRecord_Copy["X"]=parseFloat(lng);
 							outputJSONObjRecord_Copy["Y"]=parseFloat(lat);
 
@@ -481,12 +487,12 @@ window.onload = function(e) {
 								var lat = latlng[1];
 								var lng = latlng[0];
 
-								var outputJSONObjRecord_Copy = deepCopyObj(outputJSONObjRecord);
+								var outputJSONObjRecord_Copy = JSON.parse(JSON.stringify(outputJSONObjRecord));
 
-								outputJSONObjRecord_Copy["Feature ID (points+lines)"]=f;
-								outputJSONObjRecord_Copy["Sub Feature ID (points+lines)"]=i;
+								outputJSONObjRecord_Copy["Feature ID"]=f;
+								outputJSONObjRecord_Copy["Sub Feature ID"]=i;
 								outputJSONObjRecord_Copy["Geometry Type"]=geometryType;
-								outputJSONObjRecord_Copy["Point Order (points+lines)"]=ptOrder++;
+								outputJSONObjRecord_Copy["Point Order"]=ptOrder++;
 								outputJSONObjRecord_Copy["X"]=parseFloat(lng);
 								outputJSONObjRecord_Copy["Y"]=parseFloat(lat);
 
