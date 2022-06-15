@@ -542,45 +542,37 @@ window.onload = function(e) {
     	})();
 	}; // exportCSVOutBtn Function
 
-	exportMapImageBtn.onclick = function(e) {
-      	const createMapImage = async () => {
-      		try {
-		        const width = mapContainer.offsetWidth;
-		        const height = mapContainer.offsetHeight;
-		        
-		        const copiedMapElement = document.createElement("div");
-		        copiedMapElement.style.width = `${width}px`;
-		        copiedMapElement.style.height = `${height}px`;
-		        document.body.appendChild(copiedMapElement);
+	exportMapImageBtn.addEventListener('click', async()=> {
+		const width = mapContainer.offsetWidth;
+        const height = mapContainer.offsetHeight;
+        
+        const copiedMapElement = document.createElement("div");
+        copiedMapElement.style.width = `${width}px`;
+        copiedMapElement.style.height = `${height}px`;
+        document.body.appendChild(copiedMapElement);
 
-		        const copiedMap = L.map(copiedMapElement, {
-		          attributionControl: false,
-		          zoomControl: false,
-		          fadeAnimation: false,
-		          zoomAnimation: false
-		        }).setView([map.getCenter().lat,map.getCenter().lng], map.getZoom());
-		       
-		        const tileLayer = L.tileLayer(mapUrl).addTo(copiedMap);
+        const copiedMap = L.map(copiedMapElement, {
+          attributionControl: false,
+          zoomControl: false,
+          fadeAnimation: false,
+          zoomAnimation: false
+        }).setView([map.getCenter().lat,map.getCenter().lng], map.getZoom());
+       
+        const tileLayer = L.tileLayer(mapUrl).addTo(copiedMap);
 
-		        await new Promise(resolve => tileLayer.on("load", () => resolve()));
-		        const dataURL = await domtoimage.toPng(copiedMapElement, { width, height });
-		        document.body.removeChild(copiedMapElement);
-		        renderImageBounds();
+        await new Promise(resolve => tileLayer.on("load", () => resolve()));
+        const dataURL = await domtoimage.toPng(copiedMapElement, { width, height });
+        document.body.removeChild(copiedMapElement);
+        renderImageBounds();
 
-		        let dwnlnk = document.createElement("a");
-		        dwnlnk.download = "map.png";
-		        dwnlnk.innerHTML = "Download File";
-		        dwnlnk.href = dataURL;
-		        dwnlnk.style.display = "none";
-		        document.body.appendChild(dwnlnk);
-		        dwnlnk.click();
-		    } catch(err) {
-		    	alert("Error! Please try an alternative basemap API.");
-		    	console.log(err);
-		    }
-      };
-      createMapImage();
-  	};
+        let dwnlnk = document.createElement("a");
+        dwnlnk.download = "map.png";
+        dwnlnk.innerHTML = "Download File";
+        dwnlnk.href = dataURL;
+        dwnlnk.style.display = "none";
+        document.body.appendChild(dwnlnk);
+        dwnlnk.click();
+	});
 
 	function resetProgressBar() {
 		progress=0;
