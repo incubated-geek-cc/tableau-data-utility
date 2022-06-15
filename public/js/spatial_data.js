@@ -1,4 +1,12 @@
 window.onload = function(e) {
+	if (!window.Blob) {
+        alert("Your browser does not support HTML5 'Blob' function required to save a file.");
+        return;
+    } 
+    if (!window.FileReader) {
+        alert("Your browser does not support HTML5 'FileReader' function required to open a file.");
+        return;
+    }
     var popoverTargets = document.querySelectorAll("[data-content]");
 
 	Array.from(popoverTargets).map(
@@ -58,21 +66,18 @@ window.onload = function(e) {
         
         exportGeojsonOutputBtn.value = fileName;
 		exportGeojsonOutputBtn.disabled=true;
-        if (!window.FileReader) {
-            alert("Your browser does not support HTML5 'FileReader' function required to open a file.");
-        } else {
-            var fileis = uploadSpatialFile.files[0];
-            var fileredr = new FileReader();
-            fileredr.onload = function (fle) {
-                var filecont = fle.target.result;
-               	uploadSpatialFileIs=filecont;
-				exportGeojsonOutputBtn.disabled=false;
-            };
-            if(outputType=="SHP") {
-            	fileredr.readAsArrayBuffer(fileis);
-            } else if(outputType=="KML") {
-            	fileredr.readAsText(fileis);
-            }
+      
+        var fileis = uploadSpatialFile.files[0];
+        var fileredr = new FileReader();
+        fileredr.onload = function (fle) {
+            var filecont = fle.target.result;
+           	uploadSpatialFileIs=filecont;
+			exportGeojsonOutputBtn.disabled=false;
+        };
+        if(outputType=="SHP") {
+        	fileredr.readAsArrayBuffer(fileis);
+        } else if(outputType=="KML") {
+        	fileredr.readAsText(fileis);
         }
 	};
 
@@ -82,32 +87,6 @@ window.onload = function(e) {
 			case "SHP":
 				shp(uploadSpatialFileIs).then(function(geojson){
 				  	toOutput=JSON.stringify(geojson);
-				  	if (!window.Blob) {
-		                alert("Your browser does not support HTML5 'Blob' function required to save a file.");
-		            } else {
-		                let textblob = new Blob([toOutput], {
-		                    type: "text/plain"
-		                });
-		                let dwnlnk = document.createElement("a");
-		                dwnlnk.download = exportGeojsonOutputBtn.value + ".geojson";
-		                dwnlnk.innerHTML = "Download File";
-		                if (window.webkitURL != null) {
-		                    dwnlnk.href = window.webkitURL.createObjectURL(textblob);
-		                } else {
-		                    dwnlnk.href = window.URL.createObjectURL(textblob);
-		                    dwnlnk.onclick = destce;
-		                    dwnlnk.style.display = "none";
-		                    document.body.appendChild(dwnlnk);
-		                }
-		                dwnlnk.click();
-		            } 	
-				});
-				break;
-			case "KML":
-				toOutput=JSON.stringify(KMLStrtoGeoJSON(uploadSpatialFileIs));
-				if (!window.Blob) {
-	                alert("Your browser does not support HTML5 'Blob' function required to save a file.");
-	            } else {
 	                let textblob = new Blob([toOutput], {
 	                    type: "text/plain"
 	                });
@@ -123,7 +102,25 @@ window.onload = function(e) {
 	                    document.body.appendChild(dwnlnk);
 	                }
 	                dwnlnk.click();
-	            } 
+				});
+				break;
+			case "KML":
+				toOutput=JSON.stringify(KMLStrtoGeoJSON(uploadSpatialFileIs));
+	            let textblob = new Blob([toOutput], {
+	                type: "text/plain"
+	            });
+	            let dwnlnk = document.createElement("a");
+	            dwnlnk.download = exportGeojsonOutputBtn.value + ".geojson";
+	            dwnlnk.innerHTML = "Download File";
+	            if (window.webkitURL != null) {
+	                dwnlnk.href = window.webkitURL.createObjectURL(textblob);
+	            } else {
+	                dwnlnk.href = window.URL.createObjectURL(textblob);
+	                dwnlnk.onclick = destce;
+	                dwnlnk.style.display = "none";
+	                document.body.appendChild(dwnlnk);
+	            }
+	            dwnlnk.click();
 				break;
 		}
 	};
@@ -178,19 +175,16 @@ window.onload = function(e) {
 		basemap.setUrl(initialMapUrl);
 		resetMapView();
 	};
-
 	changeBasemapBtn.onclick = function(e) {
 		let newMapUrl=inputMapUrl.value;
 		mapUrl=newMapUrl;
 		basemap.setUrl(mapUrl);
 	};
-	
 	uploadGeoJsonFile.onclick = function(e) {
 		successMsg.innerHTML="";
 		errorMsg.innerHTML="";
 		e.target.value = "";
 	}
-
 	uploadGeoJsonFile.onchange = function(e) {
 		successMsg.innerHTML="";
 		errorMsg.innerHTML="";
@@ -209,164 +203,181 @@ window.onload = function(e) {
             
             exportCSVOutputBtn.value = fileName;
 			 
-            if (!window.FileReader) {
-                alert("Your browser does not support HTML5 'FileReader' function required to open a file.");
-            } else {
-                var fileis = uploadGeoJsonFile.files[0];
-                var fileredr = new FileReader();
-                fileredr.onload = function (fle) {
-                    var filecont = fle.target.result;
-                    var invalidFormat=false;
-                    var errors = geojsonhint.hint(filecont, {
-					    precisionWarning: false,
-					    noDuplicateMembers: true
-					});
+            
+            var fileis = uploadGeoJsonFile.files[0];
+            var fileredr = new FileReader();
+            fileredr.onload = function (fle) {
+                var filecont = fle.target.result;
+                var invalidFormat=false;
+                var errors = geojsonhint.hint(filecont, {
+				    precisionWarning: false,
+				    noDuplicateMembers: true
+				});
 
-                    for(var e in errors) {
-                    	var msg=errors[e]["error"];
-                    	if(typeof msg !== "undefined") {
-                    		errorMsgArr.push(msg["message"]);
-                    		invalidFormat=true;
-                    	} else if(errors[e]["message"] == "\"type\" member required") {
-                    		errorMsgArr.push("Invalid JSON format.");
-                    		invalidFormat=true;
-                    	}
-                    }
-                    if(!invalidFormat) {
-                    	if(JSON.parse(filecont)["type"] !== "FeatureCollection" || !Array.isArray(JSON.parse(filecont)["features"])) {
-                    		errorMsgArr.push("JSON structure must be the same as the above (i.e. A FeatureCollection object).");
-							invalidFormat=true;
-						}
-                    }
-                    
-					if(!invalidFormat) {
-						uploadedGeojsonObj = JSON.parse(filecont);
-						exportCSVOutputBtn.disabled=false;
-						successMsg.innerHTML = "✓ File is uploaded successfully.";
+                for(var e in errors) {
+                	var msg=errors[e]["error"];
+                	if(typeof msg !== "undefined") {
+                		errorMsgArr.push(msg["message"]);
+                		invalidFormat=true;
+                	} else if(errors[e]["message"] == "\"type\" member required") {
+                		errorMsgArr.push("Invalid JSON format.");
+                		invalidFormat=true;
+                	}
+                }
+                if(!invalidFormat) {
+                	if(JSON.parse(filecont)["type"] !== "FeatureCollection" || !Array.isArray(JSON.parse(filecont)["features"])) {
+                		errorMsgArr.push("JSON structure must be the same as the above (i.e. A FeatureCollection object).");
+						invalidFormat=true;
 					}
+                }
+                
+				if(!invalidFormat) {
+					uploadedGeojsonObj = JSON.parse(filecont);
+					exportCSVOutputBtn.disabled=false;
+					successMsg.innerHTML = "✓ File is uploaded successfully.";
+				}
 
-					displayErrorMsg();
-                };
-                fileredr.readAsText(fileis);
-            }
+				displayErrorMsg();
+            };
+            fileredr.readAsText(fileis);
         }
     }; // new file input
 
-	function deepCopyObj(obj) {
-		let resultObj={};
-		for(let o in obj) {
-			resultObj[o]=obj[o];
-		}
-		return resultObj;
-	}
+	function uncombineGeometriesInFeatureCollection(geojsonObj) {
+	    let updatedGeojsonObj = {
+	        "type": "FeatureCollection",
+	        "features": []
+	    };
+	    let geojsonInputFeatures = geojsonObj["features"];
+	    for (let g in geojsonInputFeatures) {
+	        let geojsonInputFeature = geojsonInputFeatures[g];
+	        let featureProps = geojsonInputFeature["properties"];
+	        let featureGeometry = geojsonInputFeature["geometry"];
+	        let featureGeometryType = featureGeometry["type"];
 
+	        let newPropertiesObj = JSON.parse(JSON.stringify(featureProps));
 
-	function polygonExtractionFromFeatureCollection(geojsonObj) {
-		let updatedGeojsonObj={
-			"type":"FeatureCollection",
-			"features": []
-		};
-		let geojsonInputFeatures=geojsonObj["features"];
-
-		for(let g in geojsonInputFeatures) {
-		    let geojsonInputFeature=geojsonInputFeatures[g];
-		    let featureProps=geojsonInputFeature["properties"];
-		    let featureGeometry=geojsonInputFeature["geometry"];
-		    let featureGeometryType=featureGeometry["type"];
-
-		    let newPropertiesObj=JSON.parse(JSON.stringify(featureProps));
-
-		    if(featureGeometryType=="Polygon") {
-		        newPropertiesObj["SUBID"]=0;
-				let updatedGeojsonObjFeature={
-					"type":"Feature",
-					"properties": newPropertiesObj,
-					"geometry":featureGeometry
-				};
-				updatedGeojsonObj["features"].push(updatedGeojsonObjFeature);
-		    } else if(featureGeometryType=="MultiPolygon") {
-		        let multiPolyCoords=featureGeometry["coordinates"];
-		        for(let m1 in multiPolyCoords) {
-		            for(let m2 in multiPolyCoords[m1]) {
-		                let polyCoords=[multiPolyCoords[m1][m2]];
-		                newPropertiesObj["SUBID"]=m1+"_"+m2;
-						let updatedGeojsonObjFeature={
-							"type":"Feature",
-							"properties":newPropertiesObj,
-							"geometry":{
-								"type":"Polygon",
-								"coordinates":polyCoords
-							}
-						};
-						updatedGeojsonObj["features"].push(updatedGeojsonObjFeature);
-		            }
-		        }
-		    } else if(featureGeometryType=="GeometryCollection") {
-		        let geometriesArr=featureGeometry["geometries"];
-		        for(let g2 in geometriesArr) {
-		            let geometrySubObj=geometriesArr[g2];
-		            let geometrySubType=geometrySubObj["geometry"]["type"];
-
-	             	if(typeof geometrySubObjGeometry !== "undefined") {
-			            if(geometrySubType=="Polygon") {
-			                let polyCoords=geometrySubObj["geometry"]["coordinates"];
-			                newPropertiesObj["SUBID"]=0;
-							let updatedGeojsonObjFeature={
-								"type":"Feature",
-								"properties":newPropertiesObj,
-								"geometry":{
-									"type":"Polygon",
-									"coordinates":polyCoords
-								}
-							};
-							updatedGeojsonObj["features"].push(updatedGeojsonObjFeature);
-			            } else if(geometrySubType=="MultiPolygon") {
-			                let multiPolyCoords=geometrySubObj["geometry"]["coordinates"];
-			                for(let m1 in multiPolyCoords) {
-			                    for(let m2 in multiPolyCoords[m1]) {
-			                        let polyCoords=[multiPolyCoords[m1][m2]];
-			                        newPropertiesObj["SUBID"]=m1+"_"+m2;
-									let updatedGeojsonObjFeature={
-										"type":"Feature",
-										"properties":newPropertiesObj,
-										"geometry":{
-											"type":"Polygon",
-											"coordinates":polyCoords
-										}
-									};
-									updatedGeojsonObj["features"].push(updatedGeojsonObjFeature);
-			                    }
-			                }
-			            }
-			        } else {
-		                newPropertiesObj["SUBID"]=0;
-		                let updatedGeojsonObjFeature={
-		                  "type":"Feature",
-		                  "properties": newPropertiesObj,
-		                  "geometry":featureGeometry
-		                }
-		                updatedGeojsonObj["features"].push(updatedGeojsonObjFeature);
-	              	} 
-		        }
-		    } else {
-	            newPropertiesObj["SUBID"]=0;
-	            let updatedGeojsonObjFeature={
-	              "type":"Feature",
-	              "properties": newPropertiesObj,
-	              "geometry":featureGeometry
+	        if (featureGeometryType == "Polygon") {
+	            let updatedGeojsonObjFeature = {
+	                "type": "Feature",
+	                "properties": newPropertiesObj,
+	                "geometry": featureGeometry
 	            }
 	            updatedGeojsonObj["features"].push(updatedGeojsonObjFeature);
-          	}
-		}
+	        } else if (featureGeometryType == "MultiPolygon") {
+	            let multiPolyCoords = featureGeometry["coordinates"];
+	            for (let m1 in multiPolyCoords) {
+	                for (let m2 in multiPolyCoords[m1]) {
+	                    let polyCoords = [multiPolyCoords[m1][m2]];
+	                    let updatedGeojsonObjFeature = {
+	                        "type": "Feature",
+	                        "properties": newPropertiesObj,
+	                        "geometry": {
+	                            "type": "Polygon",
+	                            "coordinates": polyCoords
+	                        }
+	                    }
+	                    updatedGeojsonObj["features"].push(updatedGeojsonObjFeature);
+	                }
+	            }
+	        } else if (featureGeometryType == "GeometryCollection") {
+	            let geometriesArr = featureGeometry["geometries"];
+	            for (let g2 in geometriesArr) {
+	                let geometrySubObj = geometriesArr[g2];
+	                let geometrySubObjGeometry = geometrySubObj["geometry"];
 
-		return updatedGeojsonObj;
+	                if (typeof geometrySubObjGeometry !== "undefined") {
+
+	                    let geometrySubType = geometrySubObjGeometry["type"];
+	                    if (geometrySubType == "Polygon") {
+	                        let polyCoords = geometrySubObjGeometry["coordinates"];
+
+	                        let updatedGeojsonObjFeature = {
+	                            "type": "Feature",
+	                            "properties": newPropertiesObj,
+	                            "geometry": {
+	                                "type": "Polygon",
+	                                "coordinates": polyCoords
+	                            }
+	                        }
+	                        updatedGeojsonObj["features"].push(updatedGeojsonObjFeature);
+	                    } else if (geometrySubType == "MultiPolygon") {
+	                        let multiPolyCoords = geometrySubObjGeometry["coordinates"];
+	                        for (let m1 in multiPolyCoords) {
+	                            for (let m2 in multiPolyCoords[m1]) {
+	                                let polyCoords = [multiPolyCoords[m1][m2]];
+	                                let updatedGeojsonObjFeature = {
+	                                    "type": "Feature",
+	                                    "properties": newPropertiesObj,
+	                                    "geometry": {
+	                                        "type": "Polygon",
+	                                        "coordinates": polyCoords
+	                                    }
+	                                }
+	                                updatedGeojsonObj["features"].push(updatedGeojsonObjFeature);
+	                            }
+	                        }
+	                    }
+	                } // end if-else GeometryCollection
+	                else {
+	                    let updatedGeojsonObjFeature = {
+	                        "type": "Feature",
+	                        "properties": newPropertiesObj,
+	                        "geometry": geometrySubObj
+	                    }
+	                    updatedGeojsonObj["features"].push(updatedGeojsonObjFeature);
+	                }
+	            } // for-loop
+	        } // already in its most granular form
+	        else {
+	            // newPropertiesObj["F_SUBID"]=0;
+	            let updatedGeojsonObjFeature = {
+	                "type": "Feature",
+	                "properties": newPropertiesObj,
+	                "geometry": featureGeometry
+	            }
+	            updatedGeojsonObj["features"].push(updatedGeojsonObjFeature);
+	        }
+	    }
+	    return updatedGeojsonObj;
 	}
 
+	function rowJSONToCSV(outputJSONObj) {
+		let csvOutputStr="";
+        let allHeaders={};
+        for(let obj of outputJSONObj) {
+          for(let k in obj) {
+            allHeaders[k]='';
+          }
+        }
+        let allHeadersArr=Object.keys(allHeaders);
+        let headerStr=JSON.stringify(allHeadersArr);
+        headerStr=headerStr.substring(1,headerStr.length-1);
+        csvOutputStr+=headerStr + "\n";
+
+        for(let obj of outputJSONObj) {
+          let allValuesArr=[];
+          for(let headerField of allHeadersArr) {
+            let rowVal=obj[headerField];
+            if(typeof rowVal !== 'undefined') {
+              allValuesArr.push(rowVal);
+            } else {
+              allValuesArr.push('NULL');
+            }
+          }
+          let rowStr=JSON.stringify(allValuesArr);
+          rowStr=rowStr.substring(1,rowStr.length-1);
+          csvOutputStr+=rowStr + "\n";
+        }
+        
+        return Promise.resolve(csvOutputStr);
+	}
+	
 	exportCSVOutputBtn.onclick = function(e) {
 		resetProgressBar();
     	loadProgressBar();
 
-    	let geojsonObj = polygonExtractionFromFeatureCollection(uploadedGeojsonObj);
+    	let geojsonObj = uncombineGeometriesInFeatureCollection(uploadedGeojsonObj);
     	uploadedGeojsonObj = JSON.parse(JSON.stringify(geojsonObj));
 
 		var features = uploadedGeojsonObj["features"];
@@ -398,10 +409,10 @@ window.onload = function(e) {
 
 							var outputJSONObjRecord_Copy = JSON.parse(JSON.stringify(outputJSONObjRecord));
 
-							outputJSONObjRecord_Copy["Feature ID"]=f;
-							outputJSONObjRecord_Copy["Sub Feature ID"]=f;
+							outputJSONObjRecord_Copy["Feature ID (polygons)"]=f;
+							outputJSONObjRecord_Copy["Sub Feature ID (polygons)"]=f;
 							outputJSONObjRecord_Copy["Geometry Type"]=geometryType;
-							outputJSONObjRecord_Copy["Point Order"]=ptOrder++;
+							outputJSONObjRecord_Copy["Point Order (polygons)"]=ptOrder++;
 							outputJSONObjRecord_Copy["X"]=parseFloat(lng);
 							outputJSONObjRecord_Copy["Y"]=parseFloat(lat);
 
@@ -419,10 +430,10 @@ window.onload = function(e) {
 
 								var outputJSONObjRecord_Copy = JSON.parse(JSON.stringify(outputJSONObjRecord));
 
-								outputJSONObjRecord_Copy["Feature ID"]=f;
-								outputJSONObjRecord_Copy["Sub Feature ID"]=i;
+								outputJSONObjRecord_Copy["Feature ID (polygons)"]=f;
+								outputJSONObjRecord_Copy["Sub Feature ID (polygons)"]=i;
 								outputJSONObjRecord_Copy["Geometry Type"]=geometryType;
-								outputJSONObjRecord_Copy["Point Order"]=ptOrder++;
+								outputJSONObjRecord_Copy["Point Order (polygons)"]=ptOrder++;
 								outputJSONObjRecord_Copy["X"]=parseFloat(lng);
 								outputJSONObjRecord_Copy["Y"]=parseFloat(lat);
 
@@ -436,10 +447,10 @@ window.onload = function(e) {
 
 						var outputJSONObjRecord_Copy = JSON.parse(JSON.stringify(outputJSONObjRecord));
 
-						outputJSONObjRecord_Copy["Feature ID"]=f;
-						outputJSONObjRecord_Copy["Sub Feature ID"]=f;
+						outputJSONObjRecord_Copy["Feature ID (points+lines)"]=f;
+						outputJSONObjRecord_Copy["Sub Feature ID (points+lines)"]=f;
 						outputJSONObjRecord_Copy["Geometry Type"]=geometryType;
-						outputJSONObjRecord_Copy["Point Order"]=ptOrder++;
+						outputJSONObjRecord_Copy["Point Order (points+lines)"]=ptOrder++;
 						outputJSONObjRecord_Copy["X"]=parseFloat(lng);
 						outputJSONObjRecord_Copy["Y"]=parseFloat(lat);
 
@@ -453,10 +464,10 @@ window.onload = function(e) {
 
 							var outputJSONObjRecord_Copy = JSON.parse(JSON.stringify(outputJSONObjRecord));
 
-							outputJSONObjRecord_Copy["Feature ID"]=f;
-							outputJSONObjRecord_Copy["Sub Feature ID"]=i;
+							outputJSONObjRecord_Copy["Feature ID (points+lines)"]=f;
+							outputJSONObjRecord_Copy["Sub Feature ID (points+lines)"]=i;
 							outputJSONObjRecord_Copy["Geometry Type"]=geometryType;
-							outputJSONObjRecord_Copy["Point Order"]=ptOrder++;
+							outputJSONObjRecord_Copy["Point Order (points+lines)"]=ptOrder++;
 							outputJSONObjRecord_Copy["X"]=parseFloat(lng);
 							outputJSONObjRecord_Copy["Y"]=parseFloat(lat);
 
@@ -470,10 +481,10 @@ window.onload = function(e) {
 
 							var outputJSONObjRecord_Copy = JSON.parse(JSON.stringify(outputJSONObjRecord));
 
-							outputJSONObjRecord_Copy["Feature ID"]=f;
-							outputJSONObjRecord_Copy["Sub Feature ID"]=f;
+							outputJSONObjRecord_Copy["Feature ID (points+lines)"]=f;
+							outputJSONObjRecord_Copy["Sub Feature ID (points+lines)"]=f;
 							outputJSONObjRecord_Copy["Geometry Type"]=geometryType;
-							outputJSONObjRecord_Copy["Point Order"]=ptOrder++;
+							outputJSONObjRecord_Copy["Point Order (points+lines)"]=ptOrder++;
 							outputJSONObjRecord_Copy["X"]=parseFloat(lng);
 							outputJSONObjRecord_Copy["Y"]=parseFloat(lat);
 
@@ -489,10 +500,10 @@ window.onload = function(e) {
 
 								var outputJSONObjRecord_Copy = JSON.parse(JSON.stringify(outputJSONObjRecord));
 
-								outputJSONObjRecord_Copy["Feature ID"]=f;
-								outputJSONObjRecord_Copy["Sub Feature ID"]=i;
+								outputJSONObjRecord_Copy["Feature ID (points+lines)"]=f;
+								outputJSONObjRecord_Copy["Sub Feature ID (points+lines)"]=i;
 								outputJSONObjRecord_Copy["Geometry Type"]=geometryType;
-								outputJSONObjRecord_Copy["Point Order"]=ptOrder++;
+								outputJSONObjRecord_Copy["Point Order (points+lines)"]=ptOrder++;
 								outputJSONObjRecord_Copy["X"]=parseFloat(lng);
 								outputJSONObjRecord_Copy["Y"]=parseFloat(lat);
 
@@ -504,88 +515,72 @@ window.onload = function(e) {
 			} // ensure it's a feature-type
 		} // end-for-loop per feature
 
+		(async () => {
+			try {
+	        	var csvDataOutput=await rowJSONToCSV(outputJSONObj);
 
-		converter.json2csvAsync(outputJSONObj, {
-            prependHeader: true,
-            sortHeader: true,
-            trimFieldValues: true,
-            trimHeaderFields: true,
-            emptyFieldValue: "",
-            delimiter: {
-                field: ",",
-                wrap: "\"",
-                eol: "\n"
-            }
-        })
-        .then((csvDataOutput) => {
-        	resetProgressBar();
-
-            if (!window.Blob) {
-                alert("Your browser does not support HTML5 'Blob' function required to save a file.");
-            } else {
-                let textblob = new Blob([csvDataOutput], {
-                    type: "text/plain"
-                });
-                let dwnlnk = document.createElement("a");
-                dwnlnk.download = exportCSVOutputBtn.value + ".csv";
-                dwnlnk.innerHTML = "Download File";
-                if (window.webkitURL != null) {
-                    dwnlnk.href = window.webkitURL.createObjectURL(textblob);
-                } else {
-                    dwnlnk.href = window.URL.createObjectURL(textblob);
-                    dwnlnk.onclick = destce;
-                    dwnlnk.style.display = "none";
-                    document.body.appendChild(dwnlnk);
-                }
-                dwnlnk.click();
-            }
-        })
-        .catch((err) => {
-        	console.log('ERROR: ' + err.message);
-        	resetProgressBar();
-        });
+	        	resetProgressBar();
+	        	let textblob = new Blob([csvDataOutput], {
+	                type: "text/plain"
+	            });
+	            let dwnlnk = document.createElement("a");
+	            dwnlnk.download = exportCSVOutputBtn.value + ".csv";
+	            dwnlnk.innerHTML = "Download File";
+	            if (window.webkitURL != null) {
+	                dwnlnk.href = window.webkitURL.createObjectURL(textblob);
+	            } else {
+	                dwnlnk.href = window.URL.createObjectURL(textblob);
+	                dwnlnk.onclick = destce;
+	                dwnlnk.style.display = "none";
+	                document.body.appendChild(dwnlnk);
+	            }
+	            dwnlnk.click();
+            } catch(err) {
+	        	console.log('ERROR: ' + err.message);
+	        	resetProgressBar();
+	        }
+    	})();
 	}; // exportCSVOutBtn Function
 
 	exportMapImageBtn.onclick = function(e) {
       	const createMapImage = async () => {
-        const width = mapContainer.offsetWidth;
-        const height = mapContainer.offsetHeight;
-        
-        const copiedMapElement = document.createElement("div");
-        copiedMapElement.style.width = `${width}px`;
-        copiedMapElement.style.height = `${height}px`;
-        document.body.appendChild(copiedMapElement);
+      		try {
+		        const width = mapContainer.offsetWidth;
+		        const height = mapContainer.offsetHeight;
+		        
+		        const copiedMapElement = document.createElement("div");
+		        copiedMapElement.style.width = `${width}px`;
+		        copiedMapElement.style.height = `${height}px`;
+		        document.body.appendChild(copiedMapElement);
 
-        const copiedMap = L.map(copiedMapElement, {
-          attributionControl: false,
-          zoomControl: false,
-          fadeAnimation: false,
-          zoomAnimation: false
-        }).setView([map.getCenter().lat,map.getCenter().lng], map.getZoom());
-       
-        const tileLayer = L.tileLayer(mapUrl).addTo(copiedMap);
+		        const copiedMap = L.map(copiedMapElement, {
+		          attributionControl: false,
+		          zoomControl: false,
+		          fadeAnimation: false,
+		          zoomAnimation: false
+		        }).setView([map.getCenter().lat,map.getCenter().lng], map.getZoom());
+		       
+		        const tileLayer = L.tileLayer(mapUrl).addTo(copiedMap);
 
-        await new Promise(resolve => tileLayer.on("load", () => resolve()));
-        const dataURL = await domtoimage.toPng(copiedMapElement, { width, height });
-        document.body.removeChild(copiedMapElement);
-        
-        renderImageBounds();
+		        await new Promise(resolve => tileLayer.on("load", () => resolve()));
+		        const dataURL = await domtoimage.toPng(copiedMapElement, { width, height });
+		        document.body.removeChild(copiedMapElement);
+		        renderImageBounds();
 
-        if (!window.Blob) {
-            alert("Your browser does not support HTML5 'Blob' function required to save a file.");
-        } else {
-            let dwnlnk = document.createElement("a");
-            dwnlnk.download = "map.png";
-            dwnlnk.innerHTML = "Download File";
-            dwnlnk.href = dataURL;
-            dwnlnk.style.display = "none";
-            document.body.appendChild(dwnlnk);
-            dwnlnk.click();
-        }
+		        let dwnlnk = document.createElement("a");
+		        dwnlnk.download = "map.png";
+		        dwnlnk.innerHTML = "Download File";
+		        dwnlnk.href = dataURL;
+		        dwnlnk.style.display = "none";
+		        document.body.appendChild(dwnlnk);
+		        dwnlnk.click();
+		    } catch(err) {
+		    	alert("Error! Please try an alternative basemap API.");
+		    	console.log(err);
+		    }
       };
       createMapImage();
   	};
-
 
 	function resetProgressBar() {
 		progress=0;

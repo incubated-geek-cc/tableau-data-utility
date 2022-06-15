@@ -1,4 +1,12 @@
 window.onload = function(e) {
+	if (!window.Blob) {
+        alert("Your browser does not support HTML5 'Blob' function required to save a file.");
+        return;
+    } 
+    if (!window.FileReader) {
+        alert("Your browser does not support HTML5 'FileReader' function required to open a file.");
+        return;
+    }
 	var popoverTargets = document.querySelectorAll("[data-content]");
 
 	Array.from(popoverTargets).map(
@@ -56,21 +64,17 @@ window.onload = function(e) {
         
         exportGeojsonOutputBtn.value = fileName;
 		exportGeojsonOutputBtn.disabled=true;
-        if (!window.FileReader) {
-            alert("Your browser does not support HTML5 'FileReader' function required to open a file.");
-        } else {
-            var fileis = uploadSpatialFile.files[0];
-            var fileredr = new FileReader();
-            fileredr.onload = function (fle) {
-                var filecont = fle.target.result;
-               	uploadSpatialFileIs=filecont;
-				exportGeojsonOutputBtn.disabled=false;
-            };
-            if(outputType=="SHP") {
-            	fileredr.readAsArrayBuffer(fileis);
-            } else if(outputType=="KML") {
-            	fileredr.readAsText(fileis);
-            }
+        var fileis = uploadSpatialFile.files[0];
+        var fileredr = new FileReader();
+        fileredr.onload = function (fle) {
+            var filecont = fle.target.result;
+           	uploadSpatialFileIs=filecont;
+			exportGeojsonOutputBtn.disabled=false;
+        };
+        if(outputType=="SHP") {
+        	fileredr.readAsArrayBuffer(fileis);
+        } else if(outputType=="KML") {
+        	fileredr.readAsText(fileis);
         }
 	};
 
@@ -80,32 +84,6 @@ window.onload = function(e) {
 			case "SHP":
 				shp(uploadSpatialFileIs).then(function(geojson){
 				  	toOutput=JSON.stringify(geojson);
-				  	if (!window.Blob) {
-		                alert("Your browser does not support HTML5 'Blob' function required to save a file.");
-		            } else {
-		                let textblob = new Blob([toOutput], {
-		                    type: "text/plain"
-		                });
-		                let dwnlnk = document.createElement("a");
-		                dwnlnk.download = exportGeojsonOutputBtn.value + ".geojson";
-		                dwnlnk.innerHTML = "Download File";
-		                if (window.webkitURL != null) {
-		                    dwnlnk.href = window.webkitURL.createObjectURL(textblob);
-		                } else {
-		                    dwnlnk.href = window.URL.createObjectURL(textblob);
-		                    dwnlnk.onclick = destce;
-		                    dwnlnk.style.display = "none";
-		                    document.body.appendChild(dwnlnk);
-		                }
-		                dwnlnk.click();
-		            } 	
-				});
-				break;
-			case "KML":
-				toOutput=JSON.stringify(KMLStrtoGeoJSON(uploadSpatialFileIs));
-				if (!window.Blob) {
-	                alert("Your browser does not support HTML5 'Blob' function required to save a file.");
-	            } else {
 	                let textblob = new Blob([toOutput], {
 	                    type: "text/plain"
 	                });
@@ -121,7 +99,25 @@ window.onload = function(e) {
 	                    document.body.appendChild(dwnlnk);
 	                }
 	                dwnlnk.click();
-	            } 
+				});
+				break;
+			case "KML":
+				toOutput=JSON.stringify(KMLStrtoGeoJSON(uploadSpatialFileIs));
+                let textblob = new Blob([toOutput], {
+                    type: "text/plain"
+                });
+                let dwnlnk = document.createElement("a");
+                dwnlnk.download = exportGeojsonOutputBtn.value + ".geojson";
+                dwnlnk.innerHTML = "Download File";
+                if (window.webkitURL != null) {
+                    dwnlnk.href = window.webkitURL.createObjectURL(textblob);
+                } else {
+                    dwnlnk.href = window.URL.createObjectURL(textblob);
+                    dwnlnk.onclick = destce;
+                    dwnlnk.style.display = "none";
+                    document.body.appendChild(dwnlnk);
+                }
+                dwnlnk.click();
 				break;
 		}
 	};
@@ -151,46 +147,42 @@ window.onload = function(e) {
             
             exportGeojsonHexMapOutputBtn.value = fileName;
 			 
-            if (!window.FileReader) {
-                alert("Your browser does not support HTML5 'FileReader' function required to open a file.");
-            } else {
-                var fileis = uploadGeoJsonFile.files[0];
-                var fileredr = new FileReader();
-                fileredr.onload = function (fle) {
-                    var filecont = fle.target.result;
-                    var invalidFormat=false;
-                    var errors = geojsonhint.hint(filecont, {
-					    precisionWarning: false,
-					    noDuplicateMembers: true
-					});
+            var fileis = uploadGeoJsonFile.files[0];
+            var fileredr = new FileReader();
+            fileredr.onload = function (fle) {
+                var filecont = fle.target.result;
+                var invalidFormat=false;
+                var errors = geojsonhint.hint(filecont, {
+				    precisionWarning: false,
+				    noDuplicateMembers: true
+				});
 
-                    for(var e in errors) {
-                    	var msg=errors[e]["error"];
-                    	if(typeof msg !== "undefined") {
-                    		errorMsgArr.push(msg["message"]);
-                    		invalidFormat=true;
-                    	} else if(errors[e]["message"] == "\"type\" member required") {
-                    		errorMsgArr.push("Invalid JSON format.");
-                    		invalidFormat=true;
-                    	}
-                    }
-                    if(!invalidFormat) {
-                    	if(JSON.parse(filecont)["type"] !== "FeatureCollection" || !Array.isArray(JSON.parse(filecont)["features"])) {
-                    		errorMsgArr.push("JSON structure must be the same as the above (i.e. A FeatureCollection object).");
-							invalidFormat=true;
-						}
-                    }
-                    
-					if(!invalidFormat) {
-						uploadedGeojsonObj = JSON.parse(filecont);
-						exportGeojsonHexMapOutputBtn.disabled=false;
-						successMsg.innerHTML = "✓ File is uploaded successfully.";
+                for(var e in errors) {
+                	var msg=errors[e]["error"];
+                	if(typeof msg !== "undefined") {
+                		errorMsgArr.push(msg["message"]);
+                		invalidFormat=true;
+                	} else if(errors[e]["message"] == "\"type\" member required") {
+                		errorMsgArr.push("Invalid JSON format.");
+                		invalidFormat=true;
+                	}
+                }
+                if(!invalidFormat) {
+                	if(JSON.parse(filecont)["type"] !== "FeatureCollection" || !Array.isArray(JSON.parse(filecont)["features"])) {
+                		errorMsgArr.push("JSON structure must be the same as the above (i.e. A FeatureCollection object).");
+						invalidFormat=true;
 					}
+                }
+                
+				if(!invalidFormat) {
+					uploadedGeojsonObj = JSON.parse(filecont);
+					exportGeojsonHexMapOutputBtn.disabled=false;
+					successMsg.innerHTML = "✓ File is uploaded successfully.";
+				}
 
-					displayErrorMsg();
-                };
-                fileredr.readAsText(fileis);
-            }
+				displayErrorMsg();
+            };
+            fileredr.readAsText(fileis);
         }
     }; // new file input
 
@@ -300,20 +292,16 @@ window.onload = function(e) {
 
 		outputObj["features"] = outputFeatures;
 
-        if (!window.Blob) {
-            alert("Your browser does not support HTML5 'Blob' function required to save a file.");
-        } else {
-            let textblob = new Blob([JSON.stringify(outputObj)], {
-                type: "text/plain"
-            });
-            let dwnlnk = document.createElement("a");
-            dwnlnk.download = exportGeojsonHexMapOutputBtn.value + "_" + outputShape + "_" + parseInt(width) + "_hexmap.geojson";
-            dwnlnk.innerHTML = "Download File";
-            if (window.webkitURL != null) {
-                dwnlnk.href = window.webkitURL.createObjectURL(textblob);
-            }
-            resetProgressBar();
-            dwnlnk.click();
+        let textblob = new Blob([JSON.stringify(outputObj)], {
+            type: "text/plain"
+        });
+        let dwnlnk = document.createElement("a");
+        dwnlnk.download = exportGeojsonHexMapOutputBtn.value + "_" + outputShape + "_" + parseInt(width) + "_hexmap.geojson";
+        dwnlnk.innerHTML = "Download File";
+        if (window.webkitURL != null) {
+            dwnlnk.href = window.webkitURL.createObjectURL(textblob);
         }
+        resetProgressBar();
+        dwnlnk.click();
 	}; // exportGeojsonOutputBtn Function
 };
