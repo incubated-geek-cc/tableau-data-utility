@@ -11,50 +11,50 @@ window.onload = function(e) {
 	  })
 	);
 
-	var uploadedGeojsonObj=null
-	var progress=0
-	var t=null
+	var uploadedGeojsonObj=null;
+	var progress=0;
+	var t=null;
 
-	var mapContainer=document.getElementById("mapAlt")
-	var resetMapViewBtn=document.getElementById("resetMapViewBtn")
-	var clearMapViewBtn=document.getElementById("clearMapViewBtn")
-	var exportBtn=document.getElementById("exportBtn")
+	var mapContainer=document.getElementById("mapAlt");
+	var resetMapViewBtn=document.getElementById("resetMapViewBtn");
+	var clearMapViewBtn=document.getElementById("clearMapViewBtn");
+	var exportBtn=document.getElementById("exportBtn");
 
-	var exportOutputBtnList=document.getElementsByClassName("exportOutputBtn")
+	var exportOutputBtnList=document.getElementsByClassName("exportOutputBtn");
 
-	var boundaryNum = document.getElementById("boundaryNum")
-	var coordinatesNum = document.getElementById("coordinatesNum")
+	var boundaryNum = document.getElementById("boundaryNum");
+	var coordinatesNum = document.getElementById("coordinatesNum");
 
-	var imgBounds_Left=document.getElementById("imgBounds_Left")
-	var imgBounds_Right=document.getElementById("imgBounds_Right")
-	var imgBounds_Bottom=document.getElementById("imgBounds_Bottom")
-	var imgBounds_Top=document.getElementById("imgBounds_Top")
+	var imgBounds_Left=document.getElementById("imgBounds_Left");
+	var imgBounds_Right=document.getElementById("imgBounds_Right");
+	var imgBounds_Bottom=document.getElementById("imgBounds_Bottom");
+	var imgBounds_Top=document.getElementById("imgBounds_Top");
 
 
-	var uploadGeoJsonFile = document.getElementById("uploadGeoJsonFile")
+	var uploadGeoJsonFile = document.getElementById("uploadGeoJsonFile");
 
 	var uploadProgress= document.getElementById("uploadProgress");
-	var progressBar=uploadProgress.getElementsByClassName("progress-bar")[0]
+	var progressBar=uploadProgress.getElementsByClassName("progress-bar")[0];
 	var errorMsg=document.getElementById("errorMsg");
 	var successMsg=document.getElementById("successMsg");
 
 	// ================== GEOJSON COORDINATES ======================
-	var uploadGeoJsonFile_1 = document.getElementById("uploadGeoJsonFile_1")
+	var uploadGeoJsonFile_1 = document.getElementById("uploadGeoJsonFile_1");
 
 	var uploadProgress_1= document.getElementById("uploadProgress_1");
-	var progressBar_1=uploadProgress_1.getElementsByClassName("progress-bar")[0]
+	var progressBar_1=uploadProgress_1.getElementsByClassName("progress-bar")[0];
 	var errorMsg_1=document.getElementById("errorMsg_1");
 	var successMsg_1=document.getElementById("successMsg_1");
 
 
-	var uploadSpatialFileIs=null
-	var outputTypes = document.getElementsByClassName("outputType")
-	var outputType="Geojson"
+	var uploadSpatialFileIs=null;
+	var outputTypes = document.getElementsByClassName("outputType");
+	var outputType="Geojson";
 
 
-	var uploadSpatialFileIs_1=null
-	var outputTypes_1 = document.getElementsByClassName("outputType_1")
-	var outputType_1="Geojson"
+	var uploadSpatialFileIs_1=null;
+	var outputTypes_1 = document.getElementsByClassName("outputType_1");
+	var outputType_1="Geojson";
 
 
 	function checkOutputType(type) {
@@ -76,72 +76,60 @@ window.onload = function(e) {
 	function lockOutputType(type,lock) {
 		if(type==0) {
 			for(var o in outputTypes) {
-				outputTypes[o].disabled=lock
+				outputTypes[o].disabled=lock;
 			}
 		} else if(type==1) {
 			for(var o in outputTypes_1) {
-				outputTypes_1[o].disabled=lock
+				outputTypes_1[o].disabled=lock;
 			}
 		}
 	}
 
 
 	// initialise
-	uploadGeoJsonFile_1.disabled = true
-	resetMapViewBtn.disabled = true
-	clearMapViewBtn.disabled = true
-	exportBtn.getElementsByTagName("span")[0].className="caret"
-	exportBtn.disabled=false
+	uploadGeoJsonFile_1.disabled = true;
+	resetMapViewBtn.disabled = true;
+	clearMapViewBtn.disabled = true;
+	exportBtn.getElementsByTagName("span")[0].className="caret";
+	exportBtn.disabled=false;
 
-	var boundaryNumVal = 0
-	var coordinatesNumVal = 0
-	boundaryNum.innerHTML=""
-	coordinatesNum.innerHTML=""
+	var boundaryNumVal = 0;
+	var coordinatesNumVal = 0;
+	boundaryNum.innerHTML="";
+	coordinatesNum.innerHTML="";
 
-	var errorMsgArr=[]
-	var imgBounds=null
-	var layerBounds=null
+	var errorMsgArr=[];
+	var imgBounds=null;
+	var layerBounds=null;
 
-	var boundaryLayer=null
-	var coordinatesLayer=null
+	var boundaryLayer=null;
+	var coordinatesLayer=null;
 
-	lockOutputType(0,false)
-	lockOutputType(1,true)
+	lockOutputType(0,false);
+	lockOutputType(1,true);
 
-	lockMapAction(true)
+	lockMapAction(true);
 	function lockMapAction(toLock) {
-		mapContainer["style"]["touch-action"]=toLock ? "none": "auto"
-		mapContainer["style"]["pointer-events"]=toLock ? "none": "auto"
+		mapContainer["style"]["touch-action"]=toLock ? "none": "auto";
+		mapContainer["style"]["pointer-events"]=toLock ? "none": "auto";
 	}
 	var map = L.map("mapAlt", {
 		zoomControl: false
-	})
-	map.on("zoomend", function(e) {
-		renderImageBounds()
 	});
-	map.on("dragend", function(e) {
-			renderImageBounds()
-	});
-	map.on("viewreset", function(e) {
-			renderImageBounds()
-	});
-	map.on("moveend", function(e) {
-			renderImageBounds()
-	});
-	map.on("load", function(e) {
-			renderImageBounds()
-	});
-	map.on("resize", function(e) {
-			renderImageBounds()
-	});
+
+	// Binding multiple events to a single element
+	function addMultipleEvents(eventsArray, targetElem, handler) {
+	  eventsArray.map((event) => targetElem.on(event, handler));
+	}
+	addMultipleEvents(['zoomend', 'dragend', 'viewreset', 'moveend', 'load', 'resize'], map, renderImageBounds);
 
 	function resetMapView() {
-		layerBounds=boundaryLayer.getBounds()
-		let northEastLat = layerBounds._northEast.lat
-		let northEastLng = layerBounds._northEast.lng
+		layerBounds=boundaryLayer.getBounds();
+		let northEastLat = layerBounds._northEast.lat;
+		let northEastLng = layerBounds._northEast.lng;
 
-		let southWestLat = layerBounds._southWest.lat
-		let southWestLng = layerBounds._southWest.lng
+		let southWestLat = layerBounds._southWest.lat;
+		let southWestLng = layerBounds._southWest.lng;
 
 		map.fitBounds([
 		    [northEastLat, northEastLng],
@@ -150,82 +138,66 @@ window.onload = function(e) {
 	}
 
 	resetMapViewBtn.onclick=function(e) {
-		resetMapView()
+		resetMapView();
 	}
 
 	for(var ex in exportOutputBtnList) {
-		var exportOutputBtn = exportOutputBtnList[ex]
-		exportOutputBtn.disabled = true
+		var exportOutputBtn = exportOutputBtnList[ex];
+		exportOutputBtn.disabled = true;
 
 		exportOutputBtn.onclick=function(e) {
-			var exportFormat = e.target.value
+			var exportFormat = e.target.value;
 
-			exportBtn.getElementsByTagName("span")[0].className="spinner-border spinner-border-sm"
-			exportBtn.disabled=true
+			exportBtn.getElementsByTagName("span")[0].className="spinner-border spinner-border-sm";
+			exportBtn.disabled=true;
+			
+			var geocodedPoints=[];
 
-			const deepCopyObj = (obj) => {
-				let resultObj={}
-				for(var o in obj) {
-					resultObj[o]=obj[o]
-				}
-				return resultObj
-			};
-			const deepCopyArr = (arr) => {
-				let resultArr={}
-				for(var a in arr) {
-					var obj=deepCopyObj(arr[a])
-					resultArr.push(obj)
-				}
-				return resultArr
-			};
-
-			var geocodedPoints=[]
-
-			var coordinateLayers = coordinatesLayer._layers
+			var coordinateLayers = coordinatesLayer._layers;
 			for(var pointIndex in coordinateLayers) {
-			    var pointFeature=coordinateLayers[pointIndex].feature
-			    var pointGeometry=pointFeature["geometry"]
-			    var pointGeomType=pointGeometry["type"]
-			    var pointCoordinates=pointGeometry["coordinates"]
+			    var pointFeature=coordinateLayers[pointIndex].feature;
+			    var pointGeometry=pointFeature["geometry"];
+			    var pointGeomType=pointGeometry["type"];
+			    var pointCoordinates=pointGeometry["coordinates"];
 			    
 			    if(pointGeomType=="Point") {
-			    	var ptLng=pointCoordinates[0]
-			    	var ptLat=pointCoordinates[1]
+			    	var ptLng=pointCoordinates[0];
+			    	var ptLat=pointCoordinates[1];
 
-			    	var pointProps=pointFeature["properties"]
-					pointProps["Latitude"]=ptLat
-					pointProps["Longitude"]=ptLng
+			    	var pointProps=pointFeature["properties"];
+					pointProps["Latitude"]=ptLat;
+					pointProps["Longitude"]=ptLng;
 
-			    	var pt=turf.point([ptLng, ptLat])
-					var pointInPoly=false
+			    	var pt=turf.point([ptLng, ptLat]);
+					var pointInPoly=false;
 
-					var boundaryLayers = boundaryLayer._layers
+					var boundaryLayers = boundaryLayer._layers;
 					for(var layerIndex in boundaryLayers) {
-					    var boundaryFeature=boundaryLayers[layerIndex].feature
-					    var boundaryGeometry=boundaryFeature["geometry"]
-					    var boundaryGeomType=boundaryGeometry["type"]
-					    var boundaryCoordinates=boundaryGeometry["coordinates"]
+					    var boundaryFeature=boundaryLayers[layerIndex].feature;
+					    var boundaryGeometry=boundaryFeature["geometry"];
+					    var boundaryGeomType=boundaryGeometry["type"];
+					    var boundaryCoordinates=boundaryGeometry["coordinates"];
 					    
 					    if(boundaryGeomType=="Polygon") {
-					        var poly = turf.polygon(boundaryCoordinates)
-					        pointInPoly=turf.booleanPointInPolygon(pt,poly)
+					        var poly = turf.polygon(boundaryCoordinates);
+					        pointInPoly=turf.booleanPointInPolygon(pt,poly);
 					    } else if(boundaryGeomType=="MultiPolygon") {
-					        var multiPoly = turf.multiPolygon(boundaryCoordinates)
-					        pointInPoly=turf.booleanPointInPolygon(pt,multiPoly)
+					        var multiPoly = turf.multiPolygon(boundaryCoordinates);
+					        pointInPoly=turf.booleanPointInPolygon(pt,multiPoly);
 					    }
 					    
 					    if(pointInPoly) {
-				        	var geocodedPoint=deepCopyObj(pointProps)
-				        	var boundaryProps=deepCopyObj(boundaryFeature["properties"])
-				        	var geocodedCoordinate=Object.assign(geocodedPoint, boundaryProps)
-				        	geocodedPoints.push(geocodedCoordinate)
-				        	break
+				        	var geocodedPoint=JSON.parse(JSON.stringify(pointProps));
+				        	var boundaryProps=JSON.parse(JSON.stringify(boundaryFeature["properties"]));
+				        	var geocodedCoordinate=Object.assign(geocodedPoint, boundaryProps);
+				        	geocodedPoints.push(geocodedCoordinate);
+				        	break;
 					    }
 					} // end inner for-loop of each boundary
 				} // end if-block
 			} // end for-loop of each coordinate
 
-			var toOutput=JSON.stringify(geocodedPoints)
+			var toOutput=JSON.stringify(geocodedPoints);
 			
 			if (!window.Blob) {
 	            alert("Your browser does not support HTML5 'Blob' function required to save a file.");
@@ -235,16 +207,15 @@ window.onload = function(e) {
 					let textblob = new Blob([toOutput], {
 	                    type: "application/json"
 	                });
-	                dwnlnk.download = "geocoded_output.json"
-	                dwnlnk.innerHTML = "Download File";
+	                dwnlnk.download = "geocoded_output.json";
 	                if (window.webkitURL != null) {
 	                    dwnlnk.href = window.webkitURL.createObjectURL(textblob);
 	                } 
-	                dwnlnk.click()
-	                exportBtn.getElementsByTagName("span")[0].className="caret"
-					exportBtn.disabled=false
+	                dwnlnk.click();
+	                exportBtn.getElementsByTagName("span")[0].className="caret";
+					exportBtn.disabled=false;
 				} else if(exportFormat == "CSV") {
-					let outputJSONObj = geocodedPoints
+					let outputJSONObj = geocodedPoints;
 					converter.json2csvAsync(outputJSONObj, {
 			            prependHeader: true,
 			            sortHeader: true,
@@ -269,13 +240,13 @@ window.onload = function(e) {
 			                if (window.webkitURL != null) {
 			                    dwnlnk.href = window.webkitURL.createObjectURL(textblob);
 			                } 
-			                dwnlnk.click()
-			                exportBtn.getElementsByTagName("span")[0].className="caret"
-							exportBtn.disabled=false
+			                dwnlnk.click();
+			                exportBtn.getElementsByTagName("span")[0].className="caret";
+							exportBtn.disabled=false;
 			            }
 			        })
 			        .catch((err) => {
-			        	console.log("ERROR: " + err.message)
+			        	console.log("ERROR: " + err.message);
 			        });
 				} // end if-else
 	        } // end if-else
@@ -284,65 +255,65 @@ window.onload = function(e) {
 
 
 	clearMapViewBtn.onclick=function(e) {
-		uploadGeoJsonFile.disabled = false
-		uploadGeoJsonFile_1.disabled = true
-		resetMapViewBtn.disabled = true
-		clearMapViewBtn.disabled = true
+		uploadGeoJsonFile.disabled = false;
+		uploadGeoJsonFile_1.disabled = true;
+		resetMapViewBtn.disabled = true;
+		clearMapViewBtn.disabled = true;
 		for(var ex in exportOutputBtnList) {
-			var exportOutputBtn = exportOutputBtnList[ex]
-			exportOutputBtn.disabled = true
+			var exportOutputBtn = exportOutputBtnList[ex];
+			exportOutputBtn.disabled = true;
 		}
 
-		uploadSpatialFileIs=null
-		outputTypes[0].checked=true
-		outputType="Geojson"
+		uploadSpatialFileIs=null;
+		outputTypes[0].checked=true;
+		outputType="Geojson";
 
-		uploadSpatialFileIs_1=null
-		outputTypes_1[0].checked=true
-		outputType_1="Geojson"
+		uploadSpatialFileIs_1=null;
+		outputTypes_1[0].checked=true;
+		outputType_1="Geojson";
 
-		lockOutputType(0,false)
-		lockOutputType(1,true)
+		lockOutputType(0,false);
+		lockOutputType(1,true);
 
 		map.eachLayer(function(layer) {
-			map.removeLayer(layer)
+			map.removeLayer(layer);
 		})
 
-		errorMsgArr=[]
-		imgBounds=null
-		layerBounds=null
+		errorMsgArr=[];
+		imgBounds=null;
+		layerBounds=null;
 		
-		boundaryLayer=null
-		coordinatesLayer=null
+		boundaryLayer=null;
+		coordinatesLayer=null;
 
-		uploadGeoJsonFileClickFunc(0)
-		uploadGeoJsonFile.value=""
-		uploadGeoJsonFileClickFunc(1)
-		uploadGeoJsonFile_1.value=""
+		uploadGeoJsonFileClickFunc(0);
+		uploadGeoJsonFile.value="";
+		uploadGeoJsonFileClickFunc(1);
+		uploadGeoJsonFile_1.value="";
 
-		imgBounds_Left.innerHTML=""
-		imgBounds_Right.innerHTML=""
+		imgBounds_Left.innerHTML="";
+		imgBounds_Right.innerHTML="";
 
-		imgBounds_Bottom.innerHTML=""
-		imgBounds_Top.innerHTML=""
+		imgBounds_Bottom.innerHTML="";
+		imgBounds_Top.innerHTML="";
 
-		boundaryNumVal = 0
-		coordinatesNumVal = 0
-		boundaryNum.innerHTML=""
-		coordinatesNum.innerHTML=""
+		boundaryNumVal = 0;
+		coordinatesNumVal = 0;
+		boundaryNum.innerHTML="";
+		coordinatesNum.innerHTML="";
 
-		exportBtn.getElementsByTagName("span")[0].className="caret"
-		exportBtn.disabled=false
-		lockMapAction(true)
+		exportBtn.getElementsByTagName("span")[0].className="caret";
+		exportBtn.disabled=false;
+		lockMapAction(true);
 	}
 
 	function renderImageBounds() {
-		imgBounds=map.getBounds()
-		imgBounds_Left.innerHTML=imgBounds._southWest.lng
-		imgBounds_Right.innerHTML=imgBounds._northEast.lng
+		imgBounds=map.getBounds();
+		imgBounds_Left.innerHTML=imgBounds._southWest.lng;
+		imgBounds_Right.innerHTML=imgBounds._northEast.lng;
 
-		imgBounds_Bottom.innerHTML=imgBounds._southWest.lat
-		imgBounds_Top.innerHTML=imgBounds._northEast.lat
+		imgBounds_Bottom.innerHTML=imgBounds._southWest.lat;
+		imgBounds_Top.innerHTML=imgBounds._northEast.lat;
 	}
 
 	function uploadGeoJsonFileClickFunc(type) {
@@ -355,12 +326,12 @@ window.onload = function(e) {
 		}
 	}
 	uploadGeoJsonFile.onclick = function(e) {
-		uploadGeoJsonFileClickFunc(0)
+		uploadGeoJsonFileClickFunc(0);
 		e.target.value = "";
 	}
 
 	uploadGeoJsonFile_1.onclick = function(e) {
-		uploadGeoJsonFileClickFunc(1)
+		uploadGeoJsonFileClickFunc(1);
 		e.target.value = "";
 	}
 
@@ -391,13 +362,13 @@ window.onload = function(e) {
 	    if(type==0) {
 	        // check if GeoJSON contains Polygon or MultiPolygon features
 	        if(!invalidFormat) {
-	        	let geojsonFeatures=geojson["features"]
-	        	invalidFormat=true
+	        	let geojsonFeatures=geojson["features"];
+	        	invalidFormat=true;
 	        	for(let gf in geojsonFeatures) {
-	        		let geomType=geojsonFeatures[gf]["geometry"]["type"]
+	        		let geomType=geojsonFeatures[gf]["geometry"]["type"];
 	        		if(geomType=="Polygon" || geomType=="MultiPolygon") {
-	        			invalidFormat=false
-						boundaryNumVal++
+	        			invalidFormat=false;
+						boundaryNumVal++;
 	        		}
 	        	}
 	        	if(invalidFormat) {
@@ -407,14 +378,14 @@ window.onload = function(e) {
 	        
 
 			if(!invalidFormat) {
-				uploadedGeojsonObj = geojson
+				uploadedGeojsonObj = geojson;
 				uploadGeoJsonFile_1.disabled=false;
-				successMsg.innerHTML = "✓ File is uploaded successfully."
-				uploadGeoJsonFile.disabled=true
-				clearMapViewBtn.disabled=false
-				resetMapViewBtn.disabled=false
+				successMsg.innerHTML = "✓ File is uploaded successfully.";
+				uploadGeoJsonFile.disabled=true;
+				clearMapViewBtn.disabled=false;
+				resetMapViewBtn.disabled=false;
 
-				boundaryNum.innerHTML=boundaryNumVal
+				boundaryNum.innerHTML=boundaryNumVal;
 
 				boundaryLayer = L.geoJSON(uploadedGeojsonObj, {
 				    style: function (feature) {
@@ -429,19 +400,19 @@ window.onload = function(e) {
 				}).bindPopup(function (layer) {
 				    return jsonObjToHTMLTable(layer.feature.properties)
 				}).addTo(map)
-				resetMapView()
-				lockOutputType(0,true)
-				lockOutputType(1,false)
+				resetMapView();
+				lockOutputType(0,true);
+				lockOutputType(1,false);
 			}
-			displayErrorMsg(0)
+			displayErrorMsg(0);
 		} else if(type==1) {
 			if(!invalidFormat) {
-				let geojsonFeatures=geojson["features"]
-	        	invalidFormat=true
+				let geojsonFeatures=geojson["features"];
+	        	invalidFormat=true;
 				for(let gf in geojsonFeatures) {
-	        		let geomType=geojsonFeatures[gf]["geometry"]["type"]
+	        		let geomType=geojsonFeatures[gf]["geometry"]["type"];
 	        		if(geomType=="Point") {
-	        			invalidFormat=false
+	        			invalidFormat=false;
 	        			coordinatesNumVal++;
 	        		}
 	        	}
@@ -451,18 +422,18 @@ window.onload = function(e) {
 	        }
 
 	    	if(!invalidFormat) {
-				uploadedGeojsonObj = geojson
-				uploadGeoJsonFile_1.disabled = true
-				resetMapViewBtn.disabled = false
-				clearMapViewBtn.disabled = false
+				uploadedGeojsonObj = geojson;
+				uploadGeoJsonFile_1.disabled = true;
+				resetMapViewBtn.disabled = false;
+				clearMapViewBtn.disabled = false;
 				for(var ex in exportOutputBtnList) {
-					var exportOutputBtn = exportOutputBtnList[ex]
-					exportOutputBtn.disabled = false
+					var exportOutputBtn = exportOutputBtnList[ex];
+					exportOutputBtn.disabled = false;
 				}
 
-				coordinatesNum.innerHTML=coordinatesNumVal
+				coordinatesNum.innerHTML=coordinatesNumVal;
 
-				successMsg_1.innerHTML = "✓ File is uploaded successfully."
+				successMsg_1.innerHTML = "✓ File is uploaded successfully.";
 				coordinatesLayer = L.geoJSON(uploadedGeojsonObj, {
 				    pointToLayer: function (feature, latlng) {
 						return L.marker(latlng, {
@@ -472,72 +443,72 @@ window.onload = function(e) {
 						}).addTo(map)
 					}
 				}).bindPopup(function (layer) {
-				    return jsonObjToHTMLTable(layer.feature.properties)
+				    return jsonObjToHTMLTable(layer.feature.properties);
 				}).addTo(map)
 				
-				lockMapAction(false)
-				resetMapView()
-				lockOutputType(0,true)
-				lockOutputType(1,true)
+				lockMapAction(false);
+				resetMapView();
+				lockOutputType(0,true);
+				lockOutputType(1,true);
 			}
-			displayErrorMsg(1)
+			displayErrorMsg(1);
 		}
 	};
 
 	uploadGeoJsonFile.onchange = function(uploadFle) {
 		if(uploadFle.target.value !== "" && uploadFle.target.files.length>0) {
-			uploadGeoJsonFileClickFunc(0)
-			uploadedGeojsonObj=null
-			errorMsgArr=[]
+			uploadGeoJsonFileClickFunc(0);
+			uploadedGeojsonObj=null;
+			errorMsgArr=[];
 			for(var ex in exportOutputBtnList) {
-				var exportOutputBtn = exportOutputBtnList[ex]
-				exportOutputBtn.disabled = true
+				var exportOutputBtn = exportOutputBtnList[ex];
+				exportOutputBtn.disabled = true;
 			}
-			clearMapViewBtn.disabled = true
-			uploadGeoJsonFile_1.disabled=true
-			resetProgressBar(0)
+			clearMapViewBtn.disabled = true;
+			uploadGeoJsonFile_1.disabled=true;
+			resetProgressBar(0);
 
-			boundaryNumVal = 0
-			boundaryNum.innerHTML=""
+			boundaryNumVal = 0;
+			boundaryNum.innerHTML="";
 			// check which spatial format is selected
-			checkOutputType(0)
+			checkOutputType(0);
 
 	        if (!window.FileReader) {
 	            alert("Your browser does not support HTML5 'FileReader' function required to open a file.");
 	        } else {
-	            var fileis = uploadGeoJsonFile.files[0]
-	            var fileredr = new FileReader()
+	            var fileis = uploadGeoJsonFile.files[0];
+	            var fileredr = new FileReader();
 	        	if(outputType=="SHP") {
-	        		fileredr.readAsArrayBuffer(fileis)
+	        		fileredr.readAsArrayBuffer(fileis);
 	        	} else if(outputType=="KML" || outputType=="Geojson") {
-	            	fileredr.readAsText(fileis)
+	            	fileredr.readAsText(fileis);
 	            }
 	            fileredr.onload = function (fle) {
-	            	errorMsgArr=[]
+	            	errorMsgArr=[];
 
-	            	loadProgressBar(0)
-	            	var filecont = fle.target.result // array buffer
-	               	uploadSpatialFileIs=filecont
+	            	loadProgressBar(0);
+	            	var filecont = fle.target.result; // array buffer
+	               	uploadSpatialFileIs=filecont;
 		            if(outputType=="SHP") {
 		            	shp(uploadSpatialFileIs).then(function(geojsonObj) {
-						  	performGeojsonBoundaryCheck(0,geojsonObj)
+						  	performGeojsonBoundaryCheck(0,geojsonObj);
 						}) // end shp-file
 		            } else if(outputType=="KML") {
-		            	let geojsonObj=KMLStrtoGeoJSON(uploadSpatialFileIs)
-		            	performGeojsonBoundaryCheck(0,geojsonObj)
+		            	let geojsonObj=KMLStrtoGeoJSON(uploadSpatialFileIs);
+		            	performGeojsonBoundaryCheck(0,geojsonObj);
 		            } else if(outputType=="Geojson") {
 		            	let geojsonObj=null
 		            	try {
-		            		geojsonObj=JSON.parse(uploadSpatialFileIs)
+		            		geojsonObj=JSON.parse(uploadSpatialFileIs);
 		            	} catch(err) {
 		            		if(err.message.indexOf("SyntaxError: Unexpected token") < 0) {
-		            			geojsonObj=null
+		            			geojsonObj=null;
 		            			errorMsgArr.push("Invalid JSON format.");
-		            			displayErrorMsg(0)
+		            			displayErrorMsg(0);
 		            		}
 		            	}
 		            	if(geojsonObj !== null) {
-							performGeojsonBoundaryCheck(0,geojsonObj)				            	
+							performGeojsonBoundaryCheck(0,geojsonObj);			            	
 		            	}
 		            }
 	           } // end file-reader onload
@@ -549,74 +520,64 @@ window.onload = function(e) {
 
 	uploadGeoJsonFile_1.onchange = function(uploadFle) {
 		if(uploadFle.target.value !== "" && uploadFle.target.files.length>0) {
-			uploadGeoJsonFileClickFunc(1)
-			uploadedGeojsonObj=null
-			errorMsgArr=[]
+			uploadGeoJsonFileClickFunc(1);
+			uploadedGeojsonObj=null;
+			errorMsgArr=[];
 			for(var ex in exportOutputBtnList) {
-				var exportOutputBtn = exportOutputBtnList[ex]
-				exportOutputBtn.disabled = true
+				var exportOutputBtn = exportOutputBtnList[ex];
+				exportOutputBtn.disabled = true;
 			}
-			clearMapViewBtn.disabled=false
-			resetProgressBar(1)
+			clearMapViewBtn.disabled=false;
+			resetProgressBar(1);
 
-			coordinatesNumVal=0
-			coordinatesNum.innerHTML=""
+			coordinatesNumVal=0;
+			coordinatesNum.innerHTML="";
 
 			// check which spatial format is selected
-			checkOutputType(1)
+			checkOutputType(1);
 
 	        if (!window.FileReader) {
 	            alert("Your browser does not support HTML5 'FileReader' function required to open a file.");
 	        } else {
 	            var fileis = uploadGeoJsonFile_1.files[0]
-	            var fileredr = new FileReader()
+	            var fileredr = new FileReader();
 	        	if(outputType_1=="SHP") {
-	        		fileredr.readAsArrayBuffer(fileis)
+	        		fileredr.readAsArrayBuffer(fileis);
 	        	} else if(outputType_1=="KML" || outputType_1=="Geojson") {
-	            	fileredr.readAsText(fileis)
+	            	fileredr.readAsText(fileis);
 	            }
 	            fileredr.onload = function (fle) {
-	            	errorMsgArr=[]
+	            	errorMsgArr=[];
 
 	            	loadProgressBar(1)
-	            	var filecont = fle.target.result // array buffer
-	               	uploadSpatialFileIs_1=filecont
+	            	var filecont = fle.target.result; // array buffer
+	               	uploadSpatialFileIs_1=filecont;
 		            if(outputType_1=="SHP") {
 		            	shp(uploadSpatialFileIs_1).then(function(geojsonObj) {
-						  	performGeojsonBoundaryCheck(1,geojsonObj)
+						  	performGeojsonBoundaryCheck(1,geojsonObj);
 						}) // end shp-file
 		            } else if(outputType_1=="KML") {
-		            	let geojsonObj=KMLStrtoGeoJSON(uploadSpatialFileIs_1)
-		            	performGeojsonBoundaryCheck(1,geojsonObj)
+		            	let geojsonObj=KMLStrtoGeoJSON(uploadSpatialFileIs_1);
+		            	performGeojsonBoundaryCheck(1,geojsonObj);
 		            } else if(outputType_1=="Geojson") {
-		            	let geojsonObj=null
+		            	let geojsonObj=null;
 		            	try {
-		            		geojsonObj=JSON.parse(uploadSpatialFileIs_1)
+		            		geojsonObj=JSON.parse(uploadSpatialFileIs_1);
 		            	} catch(err) {
 		            		if(err.message.indexOf("SyntaxError: Unexpected token") < 0) {
-		            			geojsonObj=null
+		            			geojsonObj=null;
 		            			errorMsgArr.push("Invalid JSON format.");
-		            			displayErrorMsg(1)
+		            			displayErrorMsg(1);
 		            		}
 		            	}
 		            	if(geojsonObj !== null) {
-							performGeojsonBoundaryCheck(1,geojsonObj)				            	
+							performGeojsonBoundaryCheck(1,geojsonObj);			            	
 		            	}
 		            }
 	           } // end file-reader onload
 	        }; // end if-else
 	    }
 	}; // uploadGeoJsonFile func
-
-
-
-	function deepCopyObj(obj) {
-		let resultObj={};
-		for(let o in obj) {
-			resultObj[o]=obj[o];
-		}
-		return resultObj;
-	}
 
 	function resetProgressBar(type) {
 		progress=0;
@@ -666,27 +627,27 @@ window.onload = function(e) {
 		resetProgressBar(type);
 		var errorMsgHtmlStr="";
 		if(errorMsgArr.length>0) {
-			errorMsgHtmlStr+="<ol>"
+			errorMsgHtmlStr+="<ol>";
 		}
 		for(var e in errorMsgArr) {
-			errorMsgHtmlStr+="<li>"+errorMsgArr[e]+" ✗</li>"
+			errorMsgHtmlStr+="<li>"+errorMsgArr[e]+" ✗</li>";
 		}
 		if(errorMsgArr.length>0) {
 			errorMsgHtmlStr+="</ol>";
 			for(var ex in exportOutputBtnList) {
-				var exportOutputBtn = exportOutputBtnList[ex]
-				exportOutputBtn.disabled = true
+				var exportOutputBtn = exportOutputBtnList[ex];
+				exportOutputBtn.disabled = true;
 			}
 		}
 		errorMsg.innerHTML=errorMsgHtmlStr;
 	}
 
 	function jsonObjToHTMLTable(jsonObj) {
-		let output="<div class='table-responsive table-condensed small'><table class='table table-bordered table-condensed small'><thead><th>" + Object.keys(jsonObj).join("</th><th>") + "</th></thead>"
-		output+="<tbody>"
-		output+="<tr><td>" + Object.values(jsonObj).join("</td><td>") + "</td></tr>"
-		output+="</tbody></table></div>"
+		let output="<div class='table-responsive table-condensed small'><table class='table table-bordered table-condensed small'><thead><th>" + Object.keys(jsonObj).join("</th><th>") + "</th></thead>";
+		output+="<tbody>";
+		output+="<tr><td>" + Object.values(jsonObj).join("</td><td>") + "</td></tr>";
+		output+="</tbody></table></div>";
 
-		return output
+		return output;
 	}
 };

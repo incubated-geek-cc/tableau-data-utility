@@ -557,7 +557,6 @@ window.onload = function(e) {
           fadeAnimation: false,
           zoomAnimation: false
         }).setView([map.getCenter().lat,map.getCenter().lng], map.getZoom());
-       
         const tileLayer = L.tileLayer(mapUrl).addTo(copiedMap);
 
         await new Promise(resolve => tileLayer.on("load", () => resolve()));
