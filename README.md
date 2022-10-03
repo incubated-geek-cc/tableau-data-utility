@@ -7,7 +7,7 @@
 * Export of generated transformed data files 
 
 ### 1. Generate Network Graph Data for Tableau
-Adjustment specific positiosn of nodes to alter network graph layout
+Adjustment specific position of nodes to alter network graph layout
 <br/>**Demo:**<br/>![Demo of Layout Adjustment](https://miro.medium.com/max/960/1*_XoEvi8yXSj8uXXuGkuVdA.gif)
 <br/>**Before Adjustment:**<br/>![Before Adjustment](https://miro.medium.com/max/1050/1*4YFXQc3_ZoccWZ26FPkNyg.png)<br/>
 <br/>**After Adjustment:**<br/>![After Adjustment](https://miro.medium.com/max/1050/1*x3sAFb5uR13G3H-mC3Ye3A.png)
