@@ -1,6 +1,6 @@
 # Tableau Data Utility
 ## Objective: Making Tableau users' lives easier in data preparation for data visualisation
-### View [app demo](https://tableau-data-utility.glitch.me/) (Note that the Heroku site has been sunset.) 
+### View [app demo](https://tableau-data-utility.onrender.com/) (Note that the Heroku site has been sunset.) 
 
 ### General Functionalities
 * Input user's data file(s)
