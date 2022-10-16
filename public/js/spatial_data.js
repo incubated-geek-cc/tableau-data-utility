@@ -542,6 +542,24 @@ window.onload = function(e) {
     	})();
 	}; // exportCSVOutBtn Function
 
+	function dataURItoBlob(dataURI) {
+	    if(typeof dataURI !== 'string'){
+	        throw new Error('Invalid argument: dataURI must be a string');
+	    }
+	    dataURI = dataURI.split(',');
+	    var type = dataURI[0].split(':')[1].split(';')[0],
+	        byteString = atob(dataURI[1]),
+	        byteStringLength = byteString.length,
+	        arrayBuffer = new ArrayBuffer(byteStringLength),
+	        intArray = new Uint8Array(arrayBuffer);
+	    for (var i = 0; i < byteStringLength; i++) {
+	        intArray[i] = byteString.charCodeAt(i);
+	    }
+	    return new Blob([intArray], {
+	        type: type
+	    });
+	}
+
 	exportMapImageBtn.addEventListener('click', async()=> {
 		const width = mapContainer.offsetWidth;
         const height = mapContainer.offsetHeight;
@@ -561,16 +579,15 @@ window.onload = function(e) {
 
         await new Promise(resolve => tileLayer.on("load", () => resolve()));
         const dataURL = await domtoimage.toPng(copiedMapElement, { width, height });
-        document.body.removeChild(copiedMapElement);
+        // console.log(dataURL);
         renderImageBounds();
-
+        let imgBlob=dataURItoBlob(dataURL);
+        // console.log(blobImageData);
         let dwnlnk = document.createElement("a");
         dwnlnk.download = "map.png";
-        dwnlnk.innerHTML = "Download File";
-        dwnlnk.href = dataURL;
-        dwnlnk.style.display = "none";
-        document.body.appendChild(dwnlnk);
+        dwnlnk.href = window.webkitURL.createObjectURL(imgBlob);
         dwnlnk.click();
+        document.body.removeChild(copiedMapElement);
 	});
 
 	function resetProgressBar() {
