@@ -140,8 +140,16 @@ window.onload = function(e) {
 
 	var mapUrl="https://stamen-tiles.a.ssl.fastly.net/toner-hybrid/{z}/{x}/{y}.png";
 	inputMapUrl.value=mapUrl;
-		var map = L.map("map");
-		var basemap=L.tileLayer(mapUrl, {
+
+	var ext=mapUrl.substr( mapUrl.lastIndexOf('.')+1 );
+	var urlPrefix=mapUrl.replace(`/{z}/{x}/{y}.${ext}`,'');
+	urlPrefix=btoa(urlPrefix);
+	var apiBasemapUrl='api/map_tile/'+urlPrefix+'/{z}/{x}/{y}/'+ext;
+	
+	console.log(apiBasemapUrl);
+
+	var map = L.map("map");
+	var basemap=L.tileLayer(apiBasemapUrl, {
         detectRetina: true,
         maxZoom: 19,
         minZoom: 11,
@@ -165,6 +173,7 @@ window.onload = function(e) {
 	}
 	addMultipleEvents(['zoomend', 'dragend', 'viewreset', 'moveend', 'load', 'resize'], map, renderImageBounds);
 
+
 	function resetMapView() {
 		map.setZoom(initialZoom);
   		map.setView(initialView);
@@ -177,8 +186,15 @@ window.onload = function(e) {
 	};
 	changeBasemapBtn.onclick = function(e) {
 		let newMapUrl=inputMapUrl.value;
-		mapUrl=newMapUrl;
-		basemap.setUrl(mapUrl);
+		mapUrl=newMapUrl; // "https://stamen-tiles.a.ssl.fastly.net/toner-hybrid/{z}/{x}/{y}.png"
+
+		ext=mapUrl.substr( mapUrl.lastIndexOf('.')+1 );
+		urlPrefix=mapUrl.replace(`/{z}/{x}/{y}.${ext}`,'');
+		urlPrefix=btoa(urlPrefix);
+		apiBasemapUrl='api/map_tile/'+urlPrefix+'/{z}/{x}/{y}/'+ext;
+		console.log(apiBasemapUrl);
+
+		basemap.setUrl(apiBasemapUrl);
 	};
 	uploadGeoJsonFile.onclick = function(e) {
 		successMsg.innerHTML="";

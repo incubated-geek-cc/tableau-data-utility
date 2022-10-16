@@ -1,5 +1,5 @@
 {
-  "name": "tableau-network-graph-generator",
+  "name": "tableau-data-utility",
   "version": "1.0.0",
   "description": "A tool to generate network graph data for Tableau",
   "main": "index.js",
@@ -24,8 +24,11 @@
   ],
   "author": "geek_cc",
   "dependencies": {
+    "body-parser": "^1.20.1",
+    "compression": "^1.7.4",
     "consolidate": "^0.16.0",
     "express": "^4.17.1",
-    "mustache": "^4.0.1"
+    "mustache": "^4.0.1",
+    "request": "^2.88.2"
   }
 }
