@@ -150,9 +150,10 @@
 		    			<td style="padding-right: 5px;vertical-align: top;">
 		    				<p>
 		    					<mark>
-		    						<b>Note:</b> Input a valid basemap URL to change to preferred basemap. Default is: <b>https://stamen-tiles.a.ssl.fastly.net/toner-hybrid/{z}/{x}/{y}.png</b> Other examples include: <b>https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png</b> and <b>https://maps-{s}.onemap.sg/v3/Original/{z}/{x}/{y}.png</b>
+		    						<b>Note:</b> Input a valid basemap URL to change to preferred basemap. Default is: <s class='text-danger'>https://stamen-tiles.{s}.ssl.fastly.net/toner-hybrid/{z}/{x}/{y}.png</s> <b id='initialMapUrl'>https://tile-{s}.openstreetmap.fr/hot/{z}/{x}/{y}.png</b> Other examples include: <b>https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png</b> and <b>https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png</b>
 	    						</mark>
 		    				</p>
+		    				<!-- 11/1612/1014.png -->
 						    <form class="form-inline">
 					       		<label for="inputMapUrl"><b>Map URL: </b></label>
 								<input id="inputMapUrl" type="text" class="form-control form-control-sm rounded-0" placeholder="Enter basemap url" /><button id="changeBasemapBtn" type="button" class="btn btn-outline-info btn-sm rounded-0">Go</button><button id="resetMapBtn" type="button" class="btn btn-outline-dark btn-sm rounded-0">Reset</button>

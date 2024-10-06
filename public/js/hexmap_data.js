@@ -1,4 +1,4 @@
-window.onload = function(e) {
+document.addEventListener('DOMContentLoaded', async()=> {
 	if (!window.Blob) {
         alert("Your browser does not support HTML5 'Blob' function required to save a file.");
         return;
@@ -94,9 +94,6 @@ window.onload = function(e) {
 	                    dwnlnk.href = window.webkitURL.createObjectURL(textblob);
 	                } else {
 	                    dwnlnk.href = window.URL.createObjectURL(textblob);
-	                    dwnlnk.onclick = destce;
-	                    dwnlnk.style.display = "none";
-	                    document.body.appendChild(dwnlnk);
 	                }
 	                dwnlnk.click();
 				});
@@ -304,4 +301,4 @@ window.onload = function(e) {
         resetProgressBar();
         dwnlnk.click();
 	}; // exportGeojsonOutputBtn Function
-};
+});

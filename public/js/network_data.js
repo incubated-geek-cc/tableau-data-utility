@@ -1,4 +1,4 @@
-window.onload = function(e) {
+document.addEventListener('DOMContentLoaded', async()=> {
     var popoverTargets = document.querySelectorAll("[data-content]");
 
 	Array.from(popoverTargets).map(
@@ -24,7 +24,6 @@ window.onload = function(e) {
     var containerWidth = 624;
     var height = 1150;
     var width = document.body.clientWidth;
-
 
     var ngraphContainer = networkGraph.parentElement;
     ngraphContainer["style"]["padding"] = "10px 0";
@@ -492,4 +491,4 @@ window.onload = function(e) {
         }
     }; // new file input
 
-};
+});

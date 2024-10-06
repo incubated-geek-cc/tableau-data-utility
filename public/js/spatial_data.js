@@ -56,7 +56,7 @@ window.onload = function(e) {
 		}
 	}
 
-	uploadSpatialFile.onchange = function(e) {
+	uploadSpatialFile.addEventListener('change', function(e) {
 		checkOutputType();
 
 		let fileName = e.target.value;
@@ -67,10 +67,10 @@ window.onload = function(e) {
         exportGeojsonOutputBtn.value = fileName;
 		exportGeojsonOutputBtn.disabled=true;
       
-        var fileis = uploadSpatialFile.files[0];
-        var fileredr = new FileReader();
+        let fileis = uploadSpatialFile.files[0];
+        let fileredr = new FileReader();
         fileredr.onload = function (fle) {
-            var filecont = fle.target.result;
+            let filecont = fle.target.result;
            	uploadSpatialFileIs=filecont;
 			exportGeojsonOutputBtn.disabled=false;
         };
@@ -79,9 +79,9 @@ window.onload = function(e) {
         } else if(outputType=="KML") {
         	fileredr.readAsText(fileis);
         }
-	};
+	});
 
-	exportGeojsonOutputBtn.onclick = function(e) {
+	exportGeojsonOutputBtn.addEventListener('click', function(e) {
 		var toOutput="";
 		switch(outputType) {
 			case "SHP":
@@ -97,9 +97,6 @@ window.onload = function(e) {
 	                    dwnlnk.href = window.webkitURL.createObjectURL(textblob);
 	                } else {
 	                    dwnlnk.href = window.URL.createObjectURL(textblob);
-	                    dwnlnk.onclick = destce;
-	                    dwnlnk.style.display = "none";
-	                    document.body.appendChild(dwnlnk);
 	                }
 	                dwnlnk.click();
 				});
@@ -116,14 +113,11 @@ window.onload = function(e) {
 	                dwnlnk.href = window.webkitURL.createObjectURL(textblob);
 	            } else {
 	                dwnlnk.href = window.URL.createObjectURL(textblob);
-	                dwnlnk.onclick = destce;
-	                dwnlnk.style.display = "none";
-	                document.body.appendChild(dwnlnk);
 	            }
 	            dwnlnk.click();
 				break;
 		}
-	};
+	});
 	
 
 	var scale = 'scale(0.8)';
@@ -134,27 +128,34 @@ window.onload = function(e) {
 	var errorMsgArr=[];
 	var imgBounds=null;
 
-	var initialMapUrl="https://stamen-tiles.a.ssl.fastly.net/toner-hybrid/{z}/{x}/{y}.png";
+	var initialMapUrl=document.querySelector('#initialMapUrl').innerText; // api/map_tile/aHR0cHM6Ly90aWxlLXtzfS5vcGVuc3RyZWV0bWFwLmZyL2hvdA==/{z}/{x}/{y}.png
 	var initialZoom=12;
 	var initialView=[1.3521,103.8198];
 
-	var mapUrl="https://stamen-tiles.a.ssl.fastly.net/toner-hybrid/{z}/{x}/{y}.png";
+	var mapUrl=initialMapUrl;
 	inputMapUrl.value=mapUrl;
 
-	var ext=mapUrl.substr( mapUrl.lastIndexOf('.')+1 );
-	var urlPrefix=mapUrl.replace(`/{z}/{x}/{y}.${ext}`,'');
-	urlPrefix=btoa(urlPrefix);
-	var apiBasemapUrl='api/map_tile/'+urlPrefix+'/{z}/{x}/{y}/'+ext;
-	
-	console.log(apiBasemapUrl);
+	var ext,urlPrefix,apiBasemapUrl;
+
+	function renderMapTiles() {
+		ext=mapUrl.substr( mapUrl.lastIndexOf('.')+1 );
+		urlPrefix=mapUrl.replace(`/{z}/{x}/{y}.${ext}`,'');
+		urlPrefix=btoa(urlPrefix);
+		apiBasemapUrl=`api/map_tile/${urlPrefix}/{z}/{x}/{y}`;
+		if(ext) {
+			apiBasemapUrl=`${apiBasemapUrl}.${ext}`;
+		}
+		console.log('renderMapTiles', apiBasemapUrl);
+	}
+	renderMapTiles();
 
 	var map = L.map("map");
 	var basemap=L.tileLayer(apiBasemapUrl, {
-        detectRetina: true,
-        maxZoom: 19,
-        minZoom: 11,
-        attributionControl: false
-  	}).addTo(map);
+      detectRetina: true,
+      maxZoom: 19,
+      minZoom: 11,
+      attributionControl: false
+	}).addTo(map);
 	map.setZoom(initialZoom);
 	map.setView(initialView);
 
@@ -173,35 +174,34 @@ window.onload = function(e) {
 	}
 	addMultipleEvents(['zoomend', 'dragend', 'viewreset', 'moveend', 'load', 'resize'], map, renderImageBounds);
 
-
 	function resetMapView() {
 		map.setZoom(initialZoom);
-  		map.setView(initialView);
-  		renderImageBounds();
+		map.setView(initialView);
+		renderImageBounds();
 	}
 	
-	resetMapBtn.onclick = function(e) {
+	resetMapBtn.addEventListener('click', function(e) {
 		basemap.setUrl(initialMapUrl);
 		resetMapView();
-	};
-	changeBasemapBtn.onclick = function(e) {
+	});
+	changeBasemapBtn.addEventListener('click', function(e) {
 		let newMapUrl=inputMapUrl.value;
 		mapUrl=newMapUrl; // "https://stamen-tiles.a.ssl.fastly.net/toner-hybrid/{z}/{x}/{y}.png"
 
 		ext=mapUrl.substr( mapUrl.lastIndexOf('.')+1 );
 		urlPrefix=mapUrl.replace(`/{z}/{x}/{y}.${ext}`,'');
 		urlPrefix=btoa(urlPrefix);
-		apiBasemapUrl='api/map_tile/'+urlPrefix+'/{z}/{x}/{y}/'+ext;
+		apiBasemapUrl=`api/map_tile/${urlPrefix}/{z}/{x}/{y}.${ext}`;
 		console.log(apiBasemapUrl);
-
+		renderMapTiles();
 		basemap.setUrl(apiBasemapUrl);
-	};
-	uploadGeoJsonFile.onclick = function(e) {
+	});
+	uploadGeoJsonFile.addEventListener('click', function(e) {
 		successMsg.innerHTML="";
 		errorMsg.innerHTML="";
 		e.target.value = "";
-	}
-	uploadGeoJsonFile.onchange = function(e) {
+	});
+	uploadGeoJsonFile.addEventListener('change', function(e) {
 		successMsg.innerHTML="";
 		errorMsg.innerHTML="";
 		uploadedGeojsonObj=null;
@@ -257,7 +257,7 @@ window.onload = function(e) {
             };
             fileredr.readAsText(fileis);
         }
-    }; // new file input
+  }); // new file input
 
 	function uncombineGeometriesInFeatureCollection(geojsonObj) {
 	    let updatedGeojsonObj = {
@@ -389,7 +389,7 @@ window.onload = function(e) {
         return Promise.resolve(csvOutputStr);
 	}
 	
-	exportCSVOutputBtn.onclick = function(e) {
+	exportCSVOutputBtn.addEventListener('click', function(e) {
 		resetProgressBar();
     	loadProgressBar();
 
@@ -541,7 +541,6 @@ window.onload = function(e) {
 	            });
 	            let dwnlnk = document.createElement("a");
 	            dwnlnk.download = exportCSVOutputBtn.value + ".csv";
-	            dwnlnk.innerHTML = "Download File";
 	            if (window.webkitURL != null) {
 	                dwnlnk.href = window.webkitURL.createObjectURL(textblob);
 	            } else {
@@ -556,7 +555,7 @@ window.onload = function(e) {
 	        	resetProgressBar();
 	        }
     	})();
-	}; // exportCSVOutBtn Function
+	}); // exportCSVOutBtn Function
 
 	function dataURItoBlob(dataURI) {
 	    if(typeof dataURI !== 'string'){

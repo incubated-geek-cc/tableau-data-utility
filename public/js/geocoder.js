@@ -1,4 +1,4 @@
-window.onload = function(e) {
+document.addEventListener('DOMContentLoaded', async()=> {
 	var popoverTargets = document.querySelectorAll("[data-content]");
 
 	Array.from(popoverTargets).map(
@@ -29,7 +29,6 @@ window.onload = function(e) {
 	var imgBounds_Right=document.getElementById("imgBounds_Right");
 	var imgBounds_Bottom=document.getElementById("imgBounds_Bottom");
 	var imgBounds_Top=document.getElementById("imgBounds_Top");
-
 
 	var uploadGeoJsonFile = document.getElementById("uploadGeoJsonFile");
 
@@ -235,8 +234,7 @@ window.onload = function(e) {
 			                let textblob = new Blob([csvDataOutput], {
 			                    type: "text/plain"
 			                });
-			                dwnlnk.download = "geocoded_output.csv"
-			                dwnlnk.innerHTML = "Download File";
+			                dwnlnk.download = "geocoded_output.csv";
 			                if (window.webkitURL != null) {
 			                    dwnlnk.href = window.webkitURL.createObjectURL(textblob);
 			                } 
@@ -650,4 +648,4 @@ window.onload = function(e) {
 
 		return output;
 	}
-};
+});
