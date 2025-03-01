@@ -34,22 +34,25 @@ const emptyBinaryArray=convertB64ToBitArr(emptyImageUrl);
 console.log(emptyBinaryArray);
 
 const https = require('https');
+
+const MapCache = require('map-cache');
+const mapCache = new MapCache();
 router.get('/map_tile/:urlPrefix/:z/:x/:y.:ext', async (req, res) => {
-		let prevHeader="";
-		let rawHeaders=req["rawHeaders"];
-		// console.log(rawHeaders);
-		let headersObj={};
-		for(let i=0;i<rawHeaders.length;i++) {
-			let rawHeader=rawHeaders[i].toLowerCase();
-			if(i==0 || i%2==0) {
-				headersObj[rawHeader]="";
-				prevHeader=rawHeader;
-			} else if(i%2!=0) {
-				headersObj[prevHeader]=rawHeader;
-			}
+	let prevHeader="";
+	let rawHeaders=req["rawHeaders"];
+	// console.log(rawHeaders);
+	let headersObj={};
+	for(let i=0;i<rawHeaders.length;i++) {
+		let rawHeader=rawHeaders[i].toLowerCase();
+		if(i==0 || i%2==0) {
+			headersObj[rawHeader]="";
+			prevHeader=rawHeader;
+		} else if(i%2!=0) {
+			headersObj[prevHeader]=rawHeader;
 		}
-		// console.log(['headersObj',headersObj]);
-		const dest = headersObj["sec-fetch-dest"];
+	}
+	// console.log(['headersObj',headersObj]);
+	const dest = headersObj["sec-fetch-dest"];
   	const accept = headersObj["accept"];
   	const isImage = dest ? dest === "image" : !/text\/html/.test(accept);
 
@@ -67,42 +70,51 @@ router.get('/map_tile/:urlPrefix/:z/:x/:y.:ext', async (req, res) => {
   	x=parseInt(x);
   	y=parseInt(y);
 
-		let srcUrl=`${urlPrefix}/${z}/${x}/${y}.${ext}`;
-		srcUrl= (!srcUrl.startsWith('https') && srcUrl.startsWith('http')) ? srcUrl.replace('http','https') : srcUrl;
-  	if(isImage) { 
-  		// if is image, end reponse here
-  		const _req = https.request(srcUrl, (_res) => {
+	let srcUrl=`${urlPrefix}/${z}/${x}/${y}.${ext}`;
+	srcUrl= (!srcUrl.startsWith('https') && srcUrl.startsWith('http')) ? srcUrl.replace('http','https') : srcUrl;
+  	// if(isImage) { 
+  			// if is image, end reponse here
+  			const _req = https.request(srcUrl, (_res) => {
 			    let allChunks = [];
 			    _res.on('data', (chunk) => {
 			        allChunks=allChunks.concat(chunk);
 			    });
-			    _res.on('end', () => {
-						res.status(200).send(allChunks[0]);
-						res.end();
+			    _res.on('end', async() => {
+			    	let chunkData=allChunks[0];
+			    	mapCache.set(srcUrl, chunkData);
+					await new Promise((resolve, reject) => setTimeout(resolve, 1));
+					res.status(200).send(chunkData);
+					// res.end();
 			    });
 			});
-			_req.on('error', (_err) => {
+			_req.on('error', async(_err) => {
 			    console.error('error', _err);
+			    if(mapCache.has(srcUrl)) {
+			  		let binaryArray=mapCache.get(srcUrl);
+			  		await new Promise((resolve, reject) => setTimeout(resolve, 1));
+			  		res.status(200).send(binaryArray);
+			  	}
 			    // res.status(200).send(emptyBinaryArray);
-			    res.end();
+			    // res.end();
 			});
 			_req.end();
-    } else {
-    	let docData=`<html style="height: 100%">
-				<head>
-					<meta name="viewport" content="width=device-width, minimum-scale=0.1">
-					<title>${srcUrl} (256×256)</title>
-				</head>
-				<body style="display: flex;margin: 0px;height: 100%;background-color: rgb(14, 14, 14);">
-					<img 
-						style="display: block;-webkit-user-select: none;margin: calc(50vh - 178px) auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;" 
-						src="${srcUrl}">
-				</body>
-			</html>`;
-    	res.set("Content-Type", "text/html");
-			res.status(200).send(docData);
-			res.end();
-    }
+    // } 
+    // else {
+    // 	let docData=`<html style="height: 100%">
+	// 			<head>
+	// 				<meta name="viewport" content="width=device-width, minimum-scale=0.1">
+	// 				<title>${srcUrl} (256×256)</title>
+	// 			</head>
+	// 			<body style="display: flex;margin: 0px;height: 100%;background-color: rgb(14, 14, 14);">
+	// 				<img 
+	// 					style="display: block;-webkit-user-select: none;margin: calc(50vh - 178px) auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;" 
+	// 					src="${srcUrl}">
+	// 			</body>
+	// 		</html>`;
+    // 	res.set("Content-Type", "text/html");
+	// 		res.status(200).send(docData);
+	// 		res.end();
+    // }
 });
 
 app.use(express.static(path.join(__dirname, "public")))

@@ -161,7 +161,7 @@ window.onload = function(e) {
 
 	function renderImageBounds() {
 		imgBounds=map.getBounds();
-    	imgBounds_Left.innerHTML=imgBounds._southWest.lng;
+    imgBounds_Left.innerHTML=imgBounds._southWest.lng;
 		imgBounds_Right.innerHTML=imgBounds._northEast.lng;
 
 		imgBounds_Bottom.innerHTML=imgBounds._southWest.lat;
@@ -181,7 +181,7 @@ window.onload = function(e) {
 	}
 	
 	resetMapBtn.addEventListener('click', function(e) {
-		basemap.setUrl(initialMapUrl);
+		basemap.setUrl(inputMapUrl.value);
 		resetMapView();
 	});
 	changeBasemapBtn.addEventListener('click', function(e) {
