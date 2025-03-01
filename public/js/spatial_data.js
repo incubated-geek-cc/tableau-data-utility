@@ -580,27 +580,27 @@ document.addEventListener('DOMContentLoaded', async() => {
 		        type: type
 		    });
 		}
-
+		
 		exportMapImageBtn.addEventListener('click', async()=> {
-			const width = mapContainer.offsetWidth;
+					const width = mapContainer.offsetWidth;
 	        const height = mapContainer.offsetHeight;
 	        
-	        const copiedMapElement = document.createElement("div");
-	        copiedMapElement.style.width = `${width}px`;
-	        copiedMapElement.style.height = `${height}px`;
-	        document.body.appendChild(copiedMapElement);
+	        // const copiedMapElement = document.createElement("div");
+	        // copiedMapElement.style.width = `${width}px`;
+	        // copiedMapElement.style.height = `${height}px`;
+	        // document.body.appendChild(copiedMapElement);
 
-	        const copiedMap = L.map(copiedMapElement, {
-	          attributionControl: false,
-	          zoomControl: false,
-	          fadeAnimation: false,
-	          zoomAnimation: false
-	        }).setView([map.getCenter().lat,map.getCenter().lng], map.getZoom());
-	        const tileLayer = L.tileLayer(apiBasemapUrl).addTo(copiedMap);
-	        console.log(apiBasemapUrl);
+	        // const copiedMap = L.map(copiedMapElement, {
+	        //   attributionControl: false,
+	        //   zoomControl: false,
+	        //   fadeAnimation: false,
+	        //   zoomAnimation: false
+	        // }).setView([map.getCenter().lat,map.getCenter().lng], map.getZoom());
+	        // const tileLayer = L.tileLayer(apiBasemapUrl).addTo(copiedMap);
+	        // console.log(apiBasemapUrl);
 	        
-	        await new Promise(resolve => tileLayer.on("load", () => resolve()));
-	        const dataURL = await domtoimage.toPng(copiedMapElement, { width, height });
+	        // await new Promise(resolve => tileLayer.on("load", () => resolve()));
+	        const dataURL = await domtoimage.toPng(document.querySelector('#map'), { width, height });
 	        // console.log(dataURL);
 	        renderImageBounds();
 	        let imgBlob=dataURItoBlob(dataURL);
@@ -609,7 +609,7 @@ document.addEventListener('DOMContentLoaded', async() => {
 	        dwnlnk.download = "map.png";
 	        dwnlnk.href = window.webkitURL.createObjectURL(imgBlob);
 	        dwnlnk.click();
-	        document.body.removeChild(copiedMapElement);
+	        // document.body.removeChild(copiedMapElement);
 		});
 
 		function resetProgressBar() {
