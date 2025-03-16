@@ -581,35 +581,49 @@ document.addEventListener('DOMContentLoaded', async() => {
 		    });
 		}
 		
+		var dwnlnk_DataURL;
 		exportMapImageBtn.addEventListener('click', async()=> {
-					const width = mapContainer.offsetWidth;
-	        const height = mapContainer.offsetHeight;
-	        
-	        // const copiedMapElement = document.createElement("div");
-	        // copiedMapElement.style.width = `${width}px`;
-	        // copiedMapElement.style.height = `${height}px`;
-	        // document.body.appendChild(copiedMapElement);
+			const width = mapContainer.offsetWidth;
+		        const height = mapContainer.offsetHeight;
+		        
+		        // const copiedMapElement = document.createElement("div");
+		        // copiedMapElement.style.width = `${width}px`;
+		        // copiedMapElement.style.height = `${height}px`;
+		        // document.body.appendChild(copiedMapElement);
 
-	        // const copiedMap = L.map(copiedMapElement, {
-	        //   attributionControl: false,
-	        //   zoomControl: false,
-	        //   fadeAnimation: false,
-	        //   zoomAnimation: false
-	        // }).setView([map.getCenter().lat,map.getCenter().lng], map.getZoom());
-	        // const tileLayer = L.tileLayer(apiBasemapUrl).addTo(copiedMap);
-	        // console.log(apiBasemapUrl);
-	        
-	        // await new Promise(resolve => tileLayer.on("load", () => resolve()));
-	        const dataURL = await domtoimage.toPng(document.querySelector('#map'), { width, height });
-	        // console.log(dataURL);
-	        renderImageBounds();
-	        let imgBlob=dataURItoBlob(dataURL);
-	        // console.log(blobImageData);
-	        let dwnlnk = document.createElement("a");
-	        dwnlnk.download = "map.png";
-	        dwnlnk.href = window.webkitURL.createObjectURL(imgBlob);
-	        dwnlnk.click();
-	        // document.body.removeChild(copiedMapElement);
+		        // const copiedMap = L.map(copiedMapElement, {
+		        //   attributionControl: false,
+		        //   zoomControl: false,
+		        //   fadeAnimation: false,
+		        //   zoomAnimation: false
+		        // }).setView([map.getCenter().lat,map.getCenter().lng], map.getZoom());
+		        // const tileLayer = L.tileLayer(apiBasemapUrl).addTo(copiedMap);
+		        // console.log(apiBasemapUrl);
+		        
+		        // await new Promise(resolve => tileLayer.on("load", () => resolve()));
+		        const dataURL = await domtoimage.toPng(document.querySelector('#map'), { width, height });
+		        // console.log(dataURL);
+		        renderImageBounds();
+
+		        if(typeof dwnlnk_DataURL ==='undefined') {
+		        	dwnlnk_DataURL= document.createElement("a");
+		        }
+		        dwnlnk_DataURL.download = "map_DataURL.png";
+		        dwnlnk_DataURL.className="d-block";
+		        dwnlnk_DataURL.target="_blank";
+		        dwnlnk_DataURL.href=dataURL;
+		        dwnlnk_DataURL.innerHTML=`🔗<strong>Backup Download Link</strong> (updated 🕧${Date.now()})`;
+		        exportMapImageBtn.insertAdjacentElement('afterend',dwnlnk_DataURL);
+
+
+		        let imgBlob=dataURItoBlob(dataURL);
+		        // console.log(blobImageData);
+
+		        const dwnlnk2 = document.createElement("a");
+		        dwnlnk2.download = "map_Blob.png";
+		        dwnlnk2.href = window.webkitURL.createObjectURL(imgBlob);
+		        dwnlnk2.click();
+		        // document.body.removeChild(copiedMapElement);
 		});
 
 		function resetProgressBar() {
